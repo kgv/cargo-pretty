@@ -1,0 +1,100 @@
+order = ["package", "lib", "bin", "example", "test", "bench", "dependencies", "dev-dependencies", "build-dependencies", "target", "badges", "features", "replace", "patch", "profile", "workspace"]
+
+[package]
+order = ["name", "version", "authors", "edition", "description", "documentation", "readme", "homepage", "repository", "license", "license-file", "keywords", "categories", "workspace", "build", "links", "exclude", "include", "publish", "metadata", "default-run", "autobins", "autoexamples", "autotests", "autobenches"]
+inline = 1
+
+[package.authors]
+order = "Forward"
+
+[package.keywords]
+order = "Forward"
+
+[package.categories]
+order = "Forward"
+
+[package.exclude]
+order = "Forward"
+
+[package.include]
+order = "Forward"
+
+[lib]
+order = ["name", "path", "test", "doctest", "bench", "doc", "plugin", "proc-macro", "harness", "edition", "crate-type", "required-features"]
+
+[lib.crate-type]
+order = "Forward"
+
+[bin]
+order = ["name", "path", "test", "doctest", "bench", "doc", "plugin", "proc-macro", "harness", "edition", "crate-type", "required-features"]
+
+[bin.required-features]
+order = "Forward"
+
+[example]
+order = ["name", "path", "test", "doctest", "bench", "doc", "plugin", "proc-macro", "harness", "edition", "crate-type", "required-features"]
+
+[example.required-features]
+order = "Forward"
+
+[test]
+order = ["name", "path", "test", "doctest", "bench", "doc", "plugin", "proc-macro", "harness", "edition", "crate-type", "required-features"]
+
+[test.required-features]
+order = "Forward"
+
+[bench]
+order = ["name", "path", "test", "doctest", "bench", "doc", "plugin", "proc-macro", "harness", "edition", "crate-type", "required-features"]
+
+[bench.crate-type]
+order = "Forward"
+
+[bench.required-features]
+order = "Forward"
+
+[dependencies]
+order = "Forward"
+inline = 1
+
+[build-dependencies]
+order = "Forward"
+inline = 1
+
+[dev-dependencies]
+order = "Forward"
+inline = 1
+
+[target]
+order = "Forward"
+inline = "Never"
+
+[badges]
+order = "Forward"
+inline = 1
+
+[badges."*"]
+order = "Forward"
+
+[features]
+order = "Forward"
+
+[features."*"]
+order = "Forward"
+
+[patch]
+order = "Forward"
+
+[replace]
+order = "Forward"
+
+[profile]
+order = "Forward"
+
+[workspace]
+order = "Forward"
+
+[workspace.members]
+order = "Forward"
+
+[workspace.exclude]
+order = "Forward"

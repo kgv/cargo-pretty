@@ -1,0 +1,8 @@
+[package]
+order = "Forward"
+
+[badges]
+order = ["travis-ci", "appveyor"]
+
+[badges."*"]
+order = ["branch", "repository"]

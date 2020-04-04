@@ -1,0 +1,10 @@
+# See [configurations](https://github.com/rust-lang-nursery/rustfmt/blob/master/Configurations.md).
+
+edition = "2018" # Default: "2015"
+format_macro_matchers = true # Default: false
+merge_imports = true # Default: false
+newline_style = "Unix" # Default: "Auto"
+# reorder_impl_items = true # Default: false
+unstable_features = true # Default: false
+use_field_init_shorthand = true # Default: false
+use_try_shorthand = true # Default: false

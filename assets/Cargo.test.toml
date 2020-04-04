@@ -1,0 +1,97 @@
+[lib]
+path = "src/lib.rs"
+name = "foo"
+bench = true
+proc-macro = false
+crate-type = ["lib"]
+doc = true
+doctest = true
+test = true
+edition = "2015"
+harness = true
+
+[[example]]
+doctest = true
+crate-type = ["lib"]
+name = "foo"
+harness = true
+bench = true
+test = true
+path = "src/lib.rs"
+edition = "2015"
+required-features = []
+doc = true
+
+[package]
+documentation = "https://docs.rs/bitflags"
+default-run = "a"
+autotests = false
+autoexamples = false
+metadata = { android = { package-name = "my-awesome-android-app", assets = "path/to/static" } }
+include = ["src/**/*", "Cargo.toml"]
+categories = ["command-line-utilities", "development-tools::cargo-plugins"]
+links = "foo"
+build = "build.rs"
+license-file = "LICENSE.txt"
+publish = false
+readme = "README.md"
+authors = ["Alice <a@example.com>", "Bob <b@example.com>"]
+repository = "https://github.com/rust-lang/cargo/"
+version = "0.1.0"    # the current version, obeying semver
+license = "MIT OR Apache-2.0"
+autobins = false
+autobenches = false
+workspace = "path/to/workspace/root"
+homepage = "https://serde.rs/"
+edition = '2018'
+description = "A short description of my package"
+name = "hello_world" # the name of the package
+keywords = ["gamedev", "graphics"]
+exclude = ["build/**/*.o", "doc/**/*.html"]
+
+[[bench]]
+required-features = []
+bench = true
+edition = "2015"
+doc = true
+harness = true
+test = true
+name = "foo"
+path = "src/lib.rs"
+doctest = true
+
+[[test]]
+doc = true
+required-features = []
+edition = "2015"
+name = "foo"
+doctest = true
+bench = true
+test = true
+path = "src/lib.rs"
+harness = true
+
+[[bin]]
+harness = true
+name = "foo"
+doctest = true
+test = true
+path = "src/lib.rs"
+edition = "2015"
+required-features = []
+bench = true
+doc = true
+
+[dependencies]
+time = "0.1.12"
+some-crate = { version = "1.0", registry = "my-registry" }
+rand = { git = "https://github.com/rust-lang-nursery/rand", branch = "next" }
+hello_utils = { path = "hello_utils", version = "0.1.0" }
+bitflags = { path = "my-bitflags", version = "1.0" }
+smallvec = { git = "https://github.com/servo/rust-smallvec", version = "1.0" }
+foo = "0.1"
+bar = { git = "https://github.com/example/project", package = "foo" }
+baz = { version = "0.1", registry = "custom", package = "foo" }
+
+[unknown]
+name = "foo"

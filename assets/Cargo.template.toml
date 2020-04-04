@@ -1,0 +1,131 @@
+[package]
+name = "hello_world" # the name of the package
+version = "0.1.0"    # the current version, obeying semver
+authors = ["Alice <a@example.com>", "Bob <b@example.com>"]
+edition = '2018'
+description = "A short description of my package"
+documentation = "https://docs.rs/bitflags"
+readme = "README.md"
+homepage = "https://serde.rs/"
+repository = "https://github.com/rust-lang/cargo/"
+license = "MIT OR Apache-2.0"
+license-file = "LICENSE.txt"
+keywords = ["gamedev", "graphics"]
+categories = ["command-line-utilities", "development-tools::cargo-plugins"]
+workspace = "path/to/workspace/root"
+build = "build.rs"
+links = "foo"
+exclude = ["build/**/*.o", "doc/**/*.html"]
+include = ["src/**/*", "Cargo.toml"]
+publish = false
+metadata = { android = { package-name = "my-awesome-android-app", assets = "path/to/static" } }
+default-run = "a"
+autobins = false
+autoexamples = false
+autotests = false
+autobenches = false
+
+[lib]
+name = "foo"
+path = "src/lib.rs"
+test = true
+doctest = true
+bench = true
+doc = true
+proc-macro = false
+harness = true
+edition = "2015"
+crate-type = ["lib"]
+
+[[bin]]
+name = "foo"
+path = "src/lib.rs"
+test = true
+doctest = true
+bench = true
+doc = true
+harness = true
+edition = "2015"
+required-features = []
+
+[[example]]
+name = "foo"
+path = "src/lib.rs"
+test = true
+doctest = true
+bench = true
+doc = true
+harness = true
+edition = "2015"
+crate-type = ["lib"]
+required-features = []
+
+[[test]]
+name = "foo"
+path = "src/lib.rs"
+test = true
+doctest = true
+bench = true
+doc = true
+harness = true
+edition = "2015"
+required-features = []
+
+[[bench]]
+name = "foo"
+path = "src/lib.rs"
+test = true
+doctest = true
+bench = true
+doc = true
+harness = true
+edition = "2015"
+required-features = []
+
+[dependencies]
+time = "0.1.12"
+some-crate = { version = "1.0", registry = "my-registry" }
+rand = { git = "https://github.com/rust-lang-nursery/rand", branch = "next" }
+hello_utils = { path = "hello_utils", version = "0.1.0" }
+bitflags = { path = "my-bitflags", version = "1.0" }
+smallvec = { git = "https://github.com/servo/rust-smallvec", version = "1.0" }
+foo = "0.1"
+bar = { git = "https://github.com/example/project", package = "foo" }
+baz = { version = "0.1", registry = "custom", package = "foo" }
+
+[dev-dependencies]
+time = "0.1.12"
+some-crate = { version = "1.0", registry = "my-registry" }
+rand = { git = "https://github.com/rust-lang-nursery/rand", branch = "next" }
+hello_utils = { path = "hello_utils", version = "0.1.0" }
+bitflags = { path = "my-bitflags", version = "1.0" }
+smallvec = { git = "https://github.com/servo/rust-smallvec", version = "1.0" }
+foo = "0.1"
+bar = { git = "https://github.com/example/project", package = "foo" }
+baz = { version = "0.1", registry = "custom", package = "foo" }
+
+[build-dependencies]
+time = "0.1.12"
+some-crate = { version = "1.0", registry = "my-registry" }
+rand = { git = "https://github.com/rust-lang-nursery/rand", branch = "next" }
+hello_utils = { path = "hello_utils", version = "0.1.0" }
+bitflags = { path = "my-bitflags", version = "1.0" }
+smallvec = { git = "https://github.com/servo/rust-smallvec", version = "1.0" }
+foo = "0.1"
+bar = { git = "https://github.com/example/project", package = "foo" }
+baz = { version = "0.1", registry = "custom", package = "foo" }
+
+[target.'cfg(windows)'.dependencies]
+winhttp = "0.4.0"
+
+[target.'cfg(unix)'.dependencies]
+openssl = "1.0.1"
+
+[target.'cfg(target_arch = "x86")'.dependencies]
+native = { path = "native/i686" }
+
+[target.'cfg(target_arch = "x86_64")'.dependencies]
+native = { path = "native/x86_64" }
+
+[unknown]
+name = "foo"

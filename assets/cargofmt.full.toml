@@ -1,0 +1,100 @@
+order = "Forward"
+
+[package]
+order = "Forward"
+inline = "Auto"
+
+[package.authors]
+order = "Forward"
+
+[package.keywords]
+order = "Forward"
+
+[package.categories]
+order = "Forward"
+
+[package.exclude]
+order = "Forward"
+
+[package.include]
+order = "Forward"
+
+[lib]
+order = "Forward"
+
+[lib.crate-type]
+order = "Forward"
+
+[bin]
+order = "Forward"
+
+[bin.required-features]
+order = "Forward"
+
+[example]
+order = "Forward"
+
+[example.required-features]
+order = "Forward"
+
+[test]
+order = "Forward"
+
+[test.required-features]
+order = "Forward"
+
+[bench]
+order = "Forward"
+
+[bench.crate-type]
+order = "Forward"
+
+[bench.required-features]
+order = "Forward"
+
+[dependencies]
+order = "Forward"
+inline = "Auto"
+
+[build-dependencies]
+order = "Forward"
+inline = "Auto"
+
+[dev-dependencies]
+order = "Forward"
+inline = "Auto"
+
+[target]
+order = "Forward"
+inline = "Never"
+
+[badges]
+order = "Forward"
+inline = "Always"
+
+[badges."*"]
+order = "Forward"
+
+[features]
+order = "Forward"
+
+[features."*"]
+order = "Forward"
+
+[patch]
+order = "Forward"
+
+[replace]
+order = "Forward"
+
+[profile]
+order = "Forward"
+
+[workspace]
+order = "Forward"
+
+[workspace.members]
+order = "Forward"
+
+[workspace.exclude]
+order = "Forward"
