@@ -2,6 +2,9 @@
 
 A tool for formatting manifest according to style guidelines.
 
+Note the `0.0.1` version: it means that the code is very much experimental. You
+shouldn’t use this crate for any serious project yet.
+
 See [style guideline](./STYLE_GUIDELINE.md) for more.
 
 ## Settings
