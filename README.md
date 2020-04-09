@@ -15,7 +15,7 @@ Inline:
 - "Auto" - depends on line length.
 - "Never" - never inline,
 - "Always" - always inline,
-- `1..` - level inline,
+- `1..` - level inline.
 
 `inline = "Never"`:
 
