@@ -1,10 +1,11 @@
 //! Cargofmt
-//! 
+//!
 
 // TODO: serde_diff::SerdeDiff support (https://github.com/amethyst/serde-diff/pull/17).
 
-#![feature(exclusive_range_pattern)]
+#![feature(or_patterns)]
 #![feature(half_open_range_patterns)]
+#![feature(exclusive_range_pattern)]
 
 use self::{format::Format, inline::Inline, order::Order, settings::Settings};
 use anyhow::Result;
@@ -14,12 +15,23 @@ use toml_edit::{Document, Item, Table};
 
 // rustfmt --backup --config-path=.\\ .\\.rs.bk\\sandbox\\Cargo.toml
 
+fn main() -> Result<()> {
+    use cargo_toml::Manifest;
+    // let manifest = Manifest::from_path("D:\\PROJECT\\lang\\rust\\bin\\cargofmt\\.rs.bk\\sandbox\\Cargo.toml");
+    let manifest = Manifest::from_str(&read_to_string(
+        "D:\\PROJECT\\lang\\rust\\bin\\cargofmt\\.rs.bk\\sandbox\\Cargo.toml",
+    )?)?;
+    println!("manifest: {:?}", manifest.package);
+    println!("manifest: {}", toml::to_string(&manifest.package.unwrap())?);
+    Ok(())
+}
+
 // set RUST_LOG=debug
 // cargo run -- .\\.rs.bk\\sandbox\\Cargo.toml
 // cargo run -- --backup .\\.rs.bk\\sandbox\\Cargo.toml
 // cargo run -- --config-path=.\\ .\\.rs.bk\\sandbox\\Cargo.toml
 // cargo run -- --backup --config-path=.\\ .\\.rs.bk\\sandbox\\Cargo.toml
-fn main() -> Result<()> {
+fn gmain() -> Result<()> {
     env_logger::init();
 
     let options = options::parse();
@@ -239,6 +251,8 @@ fn format_workspace(workspace: &mut Item, settings: &Settings) {
     workspace.order(&settings.workspace.order);
     workspace.format();
 }
+
+pub mod manifest;
 
 mod format;
 mod inline;

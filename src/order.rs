@@ -91,15 +91,15 @@ pub enum Kind {
 }
 
 impl<'de> Deserialize<'de> for Kind {
-    fn deserialize<D>(deserializer: D) -> Result<Kind, D::Error>
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
     {
         const FIELDS: &'static [&'static str] = &["Forward", "Backward"];
 
-        struct OrderVisitor;
+        struct KindVisitor;
 
-        impl<'de> Visitor<'de> for OrderVisitor {
+        impl<'de> Visitor<'de> for KindVisitor {
             type Value = Kind;
 
             fn expecting(&self, formatter: &mut Formatter) -> fmt::Result {
@@ -137,7 +137,7 @@ impl<'de> Deserialize<'de> for Kind {
             }
         }
 
-        deserializer.deserialize_any(OrderVisitor)
+        deserializer.deserialize_any(KindVisitor)
     }
 }
 

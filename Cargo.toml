@@ -19,8 +19,12 @@ log = "0.4.8"
 maplit = "1.0.2"
 serde = { version = "1.0.106", features = ["derive"] }
 serde-diff = "0.3.0"
-serde_json = "1.0.51"
 thiserror = "1.0.14"
 toml = { version = "0.5.6", features = ["preserve_order"] }
 # toml_edit = "0.1.5"
 toml_edit = { git = "https://github.com/ordian/toml_edit" }
+cargo_toml = "0.8.0"
+derive_more = "0.99.5"
+
+[dev-dependencies]
+maplit = "1.0.2"
