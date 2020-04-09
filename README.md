@@ -2,6 +2,8 @@
 
 A tool for formatting manifest according to style guidelines.
 
+See [style guideline](./STYLE_GUIDELINE.md) for more.
+
 ## Settings
 
 Order:
