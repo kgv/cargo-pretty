@@ -6,7 +6,6 @@ use serde::{
     ser::SerializeSeq,
     Deserialize, Deserializer, Serialize, Serializer,
 };
-use serde_diff::SerdeDiff;
 use std::{
     borrow::Cow,
     cmp::{Ordering, Reverse},
@@ -84,8 +83,6 @@ impl Order for Table {
         *self = table;
     }
 }
-
-// TODO: Add SerdeDiff (https://github.com/amethyst/serde-diff/pull/17)
 /// Order kind.
 #[derive(Clone, Debug, PartialEq)]
 pub enum Kind {
@@ -161,10 +158,6 @@ impl Serialize for Kind {
         }
     }
 }
-
-// impl SerdeDiff for Kind {
-//     fn name();
-// }
 
 impl Default for Kind {
     fn default() -> Self {
