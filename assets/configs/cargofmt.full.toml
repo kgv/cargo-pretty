@@ -1,0 +1,100 @@
+order = "Alphabetic"
+
+[package]
+order = "Alphabetic"
+inline = "Auto"
+
+[package.authors]
+order = "Alphabetic"
+
+[package.keywords]
+order = "Alphabetic"
+
+[package.categories]
+order = "Alphabetic"
+
+[package.exclude]
+order = "Alphabetic"
+
+[package.include]
+order = "Alphabetic"
+
+[lib]
+order = "Alphabetic"
+
+[lib.crate-type]
+order = "Alphabetic"
+
+[bin]
+order = "Alphabetic"
+
+[bin.required-features]
+order = "Alphabetic"
+
+[example]
+order = "Alphabetic"
+
+[example.required-features]
+order = "Alphabetic"
+
+[test]
+order = "Alphabetic"
+
+[test.required-features]
+order = "Alphabetic"
+
+[bench]
+order = "Alphabetic"
+
+[bench.crate-type]
+order = "Alphabetic"
+
+[bench.required-features]
+order = "Alphabetic"
+
+[dependencies]
+order = "Alphabetic"
+inline = "Auto"
+
+[build-dependencies]
+order = "Alphabetic"
+inline = "Auto"
+
+[dev-dependencies]
+order = "Alphabetic"
+inline = "Auto"
+
+[target]
+order = "Alphabetic"
+inline = "Never"
+
+[badges]
+order = "Alphabetic"
+inline = "Always"
+
+[badges."*"]
+order = "Alphabetic"
+
+[features]
+order = "Alphabetic"
+
+[features."*"]
+order = "Alphabetic"
+
+[patch]
+order = "Alphabetic"
+
+[replace]
+order = "Alphabetic"
+
+[profile]
+order = "Alphabetic"
+
+[workspace]
+order = "Alphabetic"
+
+[workspace.members]
+order = "Alphabetic"
+
+[workspace.exclude]
+order = "Alphabetic"
