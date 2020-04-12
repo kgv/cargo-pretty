@@ -12,22 +12,22 @@
 Preference:
 
 - preferred order for sections:
-  1. `package`,
-  2. `lib`,
-  3. `bin`,
-  4. `example`,
-  5. `test`,
-  6. `bench`,
-  7. `dependencies`,
-  8. `dev-dependencies`,
-  9. `build-dependencies`,
-  10. `target`,
-  11. `badges`,
-  12. `features`,
-  13. `replace`,
-  14. `patch`,
-  15. `profile`,
-  16. `workspace`;
+  1.0. `package`,
+  2.0. `lib`,
+  3.0. `bin`,
+  4.0. `example`,
+  5.0. `test`,
+  6.0. `bench`,
+  7.0. `dependencies`,
+  8.0. `dev-dependencies`,
+  9.0. `build-dependencies`,
+  10.0. `target`,
+  11.0. `badges`,
+  12.0. `features`,
+  13.0. `replace`,
+  14.0. `patch`,
+  15.0. `profile`,
+  16.0. `workspace`;
 - sections should be separated by a single blank line.
 
 ### Package section
@@ -122,7 +122,7 @@ Requirements:
 Preference:
 
 - preferred order for the `features` section: alphabetical,
-- inline level for the `badges` section: 1,
+- inline level for the `features` section: 1,
 - prefer short but descriptive feature names,
 - prefer not to have default features.
 
@@ -141,7 +141,7 @@ c = "0.1.0" # This is comment 0 for `a.c`.
 
 Preference:
 
-- prefer to use "full-line" instead of "end of a line" outer comment.
+- prefer to use "full-line" instead of "end of a line" comment.
 
 ## Links
 
