@@ -1,0 +1,208 @@
+order = [
+    "package",
+    "lib",
+    "bin",
+    "example",
+    "test",
+    "bench",
+    "dependencies",
+    "dev-dependencies",
+    "build-dependencies",
+    "target",
+    "badges",
+    "features",
+    "replace",
+    "patch",
+    "profile",
+    "workspace",
+]
+
+[package]
+order = [
+    "name",
+    "version",
+    "authors",
+    "edition",
+    "description",
+    "documentation",
+    "readme",
+    "homepage",
+    "repository",
+    "license",
+    "license-file",
+    "keywords",
+    "categories",
+    "workspace",
+    "build",
+    "links",
+    "exclude",
+    "include",
+    "publish",
+    "metadata",
+    "default-run",
+    "autobins",
+    "autoexamples",
+    "autotests",
+    "autobenches",
+]
+inline = 1
+
+[package.authors]
+order = "Alphabetic"
+
+[package.keywords]
+order = "Alphabetic"
+
+[package.categories]
+order = "Alphabetic"
+
+[package.exclude]
+order = "Alphabetic"
+
+[package.include]
+order = "Alphabetic"
+
+[lib]
+order = [
+    "name",
+    "path",
+    "test",
+    "doctest",
+    "bench",
+    "doc",
+    "plugin",
+    "proc-macro",
+    "harness",
+    "edition",
+    "crate-type",
+    "required-features",
+]
+
+[lib.crate-type]
+order = "Alphabetic"
+
+[bin]
+order = [
+    "name",
+    "path",
+    "test",
+    "doctest",
+    "bench",
+    "doc",
+    "plugin",
+    "proc-macro",
+    "harness",
+    "edition",
+    "crate-type",
+    "required-features",
+]
+
+[bin.required-features]
+order = "Alphabetic"
+
+[example]
+order = [
+    "name",
+    "path",
+    "test",
+    "doctest",
+    "bench",
+    "doc",
+    "plugin",
+    "proc-macro",
+    "harness",
+    "edition",
+    "crate-type",
+    "required-features",
+]
+
+[example.required-features]
+order = "Alphabetic"
+
+[test]
+order = [
+    "name",
+    "path",
+    "test",
+    "doctest",
+    "bench",
+    "doc",
+    "plugin",
+    "proc-macro",
+    "harness",
+    "edition",
+    "crate-type",
+    "required-features",
+]
+
+[test.required-features]
+order = "Alphabetic"
+
+[bench]
+order = [
+    "name",
+    "path",
+    "test",
+    "doctest",
+    "bench",
+    "doc",
+    "plugin",
+    "proc-macro",
+    "harness",
+    "edition",
+    "crate-type",
+    "required-features",
+]
+
+[bench.crate-type]
+order = "Alphabetic"
+
+[bench.required-features]
+order = "Alphabetic"
+
+[dependencies]
+order = "Alphabetic"
+inline = 1
+
+[build-dependencies]
+order = "Alphabetic"
+inline = 1
+
+[dev-dependencies]
+order = "Alphabetic"
+inline = 1
+
+[target]
+order = "Alphabetic"
+inline = "Never"
+
+[badges]
+order = "Alphabetic"
+inline = 1
+
+[badges."*"]
+order = "Alphabetic"
+
+[features]
+order = "Alphabetic"
+
+[features."*"]
+order = "Alphabetic"
+
+[patch]
+order = "Alphabetic"
+
+[replace]
+order = "Alphabetic"
+
+[profile]
+order = "Alphabetic"
+
+[workspace]
+order = "Alphabetic"
+
+[workspace.members]
+order = "Alphabetic"
+
+[workspace.exclude]
+order = "Alphabetic"

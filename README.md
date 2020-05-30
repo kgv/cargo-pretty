@@ -2,19 +2,20 @@
 
 A tool for formatting manifest according to style guidelines.
 
-Note the `0.0.1` version: it means that the code is very much experimental. You
-shouldn’t use this crate for any serious project yet.
-
 See [style guideline](./STYLE-GUIDELINE.md) for more.
+
+**Work in progress!**
+
+Note the `0.*` version: it means that the code is very much experimental. You
+shouldn’t use this crate for any serious project yet.
 
 ## Settings
 
 Order:
 
-- "Forward" - alphabetical order,
-- "Backward" - reverse alphabetical order,
-- ["name", "version", "authors"] - enumeration order.  
-  If enumeration doesn't contain value use as is order.
+- "Unordered" - as is,
+- "Alphabetic" - alphabetic order,
+- ["name", "version", "authors"] - enumeration order or else alphabetic order.
 
 Inline:
 
@@ -47,7 +48,7 @@ b = { c = { d = "d", e = "e" } }
 
 ## Todo
 
-- [ ] comments,
+- [x] comments,
 - [ ] diff,
 - [ ] more cli options.
 

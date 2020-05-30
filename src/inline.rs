@@ -1,172 +1,50 @@
 use itertools::Itertools;
-use serde::{de, de::Visitor, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
+use serde_diff::SerdeDiff;
 use std::{
     convert::TryFrom,
     fmt::{self, Formatter},
 };
-use toml_edit::{InlineTable, Item, Table, Value};
 
 /// Inline.
-pub trait Inline {
-    fn inline(&mut self, kind: &Kind);
-}
-
-impl Inline for Item {
-    fn inline(&mut self, kind: &Kind) {
-        *self = inline_item(self, kind);
-    }
-}
-
-fn inline_item(item: &Item, kind: &Kind) -> Item {
-    match kind {
-        // TODO:
-        Kind::Auto => item.clone(),
-        never @ Kind::Manual(None) => match item {
-            Item::None => Item::None,
-            Item::Value(value) => inline_value(value, never),
-            Item::Table(table) => inline_table(table, never),
-            _ => unimplemented!(),
-            // Item::ArrayOfTables(array_of_tables) => inline_array_of_tables(array_of_tables, never),
-        },
-        always @ Kind::Manual(Some(0)) => match item {
-            Item::None => Item::None,
-            Item::Value(value) => inline_value(value, always),
-            Item::Table(table) => inline_table(table, always),
-            _ => unimplemented!(),
-            // Item::ArrayOfTables(array_of_tables) => inline_array_of_tables(array_of_tables, always),
-        },
-        kind  => {
-            // let kind = Kind::Manual(Some(level.saturating_sub(1)));
-            match item {
-                Item::None => Item::None,
-                Item::Value(value) => inline_value(value, &kind),
-                Item::Table(table) => inline_table(table, &kind),
-                _ => unimplemented!(),
-                // Item::ArrayOfTables(array_of_tables) => {
-                //     inline_array_of_tables(array_of_tables, kind)
-                // }
-            }
-        }
-    }
-}
-
-fn inline_value(value: &Value, kind: &Kind) -> Item {
-    match kind {
-        // TODO:
-        Kind::Auto => Item::Value(value.clone()),
-        never @ Kind::Manual(None) => match value {
-            // Value::Array(array) => {
-            //     // let mut array_of_tables = ArrayOfTables::default();
-            //     if array.len() == 0 {
-            //         return Item::Value(Value::Array(array.clone()));
-            //     }
-            //     let iter = array.iter();
-            //     let t = iter.next().and_then(|v| v.is_value());
-            //     let mut buffer = Vec::new();
-            //     for value in array.iter() {
-            //         let item = inline_value(value, never);
-            //         buffer.push(value)
-            //     }
-            // }
-            Value::InlineTable(inline_table) => {
-                let mut table = Table::default();
-                for (key, value) in inline_table.iter() {
-                    *table.entry(key) = inline_value(value, never);
-                }
-                Item::Table(table)
-            }
-            value => Item::Value(value.clone()),
-        },
-        _always @ Kind::Manual(Some(0)) => Item::Value(value.clone()),
-        Kind::Manual(Some(level)) => {
-            let kind = Kind::Manual(Some(level.saturating_sub(1)));
-            match value {
-                Value::InlineTable(inline_table) => {
-                    let mut table = Table::default();
-                    for (key, value) in inline_table.iter() {
-                        *table.entry(key) = inline_value(value, &kind);
-                    }
-                    Item::Table(table)
-                }
-                value => Item::Value(value.clone()),
-            }
-        }
-    }
-}
-
-fn inline_table(input_table: &Table, kind: &Kind) -> Item {
-    match kind {
-        // TODO:
-        Kind::Auto => Item::Table(input_table.clone()),
-        never @ Kind::Manual(None) => {
-            let mut output_table = Table::default();
-            for (key, item) in input_table.iter() {
-                *output_table.entry(key) = inline_item(item, never);
-            }
-            Item::Table(output_table)
-        }
-        always @ Kind::Manual(Some(0)) => {
-            let mut inline_table = InlineTable::default();
-            for (key, item) in input_table.iter() {
-                if let Item::Value(value) = inline_item(item, always) {
-                    inline_table.get_or_insert(key, value);
-                } else {
-                    panic!("inline item is not value");
-                }
-            }
-            Item::Value(Value::InlineTable(inline_table))
-        }
-        Kind::Manual(Some(level)) => {
-            let kind = Kind::Manual(Some(level.saturating_sub(1)));
-            let mut output_table = Table::default();
-            for (key, item) in input_table.iter() {
-                *output_table.entry(key) = inline_item(item, &kind);
-            }
-            Item::Table(output_table)
-        }
-    }
-}
-
-// fn from_table_to_inline_table(from: &Table, to: &mut InlineTable) {
-//     for (key, item) in from.iter() {
-//         match item {
-//             Item::Value(value) => {
-//                 to.get_or_insert(key, value.clone());
-//             }
-//             Item::Table(table) => {
-//                 let mut value = InlineTable::default();
-//                 from_table_to_inline_table(table, &mut value);
-//                 to.get_or_insert(key, value);
-//             }
-//             // TODO:
-//             _ => unreachable!(),
-//         };
-//     }
-// }
-
-/// Inline kind.
 ///
-/// - Kind::Manual(None) => "Never" (never inline),
-/// - Kind::Manual(Some(0)) => "Always" (Inline start with self),
-/// - Kind::Manual(Some(1)) => 1 (Inline start with cildren),
-/// - Kind::Manual(Some(2)) => 2 (Inline start with cildren of cildren).
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum Kind {
+/// - `Inline::Auto` - TODO:,
+/// - `Inline::Manual(None)` => never inline ("Never"),
+/// - `Inline::Manual(Some(0))` => inline starting with self ("Always"),
+/// - `Inline::Manual(Some(1))` => inline starting with children (level 1),
+/// - `Inline::Manual(Some(2))` => inline starting with children of children (level 2),
+/// - etc.
+#[derive(Clone, Copy, Debug, Eq, PartialEq, SerdeDiff)]
+pub enum Inline {
     Auto,
     Manual(Option<u64>),
 }
 
-impl<'de> Deserialize<'de> for Kind {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        const FIELDS: &'static [&'static str] = &["Auto", "Never", "Always", "1u64.."];
+impl Inline {
+    pub fn branch(self) -> Self {
+        match self {
+            Self::Manual(Some(level)) => Self::Manual(Some(level.saturating_sub(1))),
+            mode => mode,
+        }
+    }
 
-        struct KindVisitor;
+    pub fn is_inline(&self) -> bool {
+        match self {
+            Self::Auto => true,
+            Self::Manual(Some(0)) => true,
+            _ => false,
+        }
+    }
+}
 
-        impl<'de> Visitor<'de> for KindVisitor {
-            type Value = Kind;
+impl<'de> Deserialize<'de> for Inline {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        const FIELDS: &'static [&'static str] = &["Auto", "Never", "Always", "1.."];
+
+        struct Visitor;
+
+        impl<'de> de::Visitor<'de> for Visitor {
+            type Value = Inline;
 
             fn expecting(&self, formatter: &mut Formatter) -> fmt::Result {
                 write!(
@@ -183,14 +61,14 @@ impl<'de> Deserialize<'de> for Kind {
                 E: de::Error,
             {
                 match value {
-                    "Auto" => Ok(Kind::Auto),
-                    "Never" => Ok(Kind::Manual(None)),
-                    "Always" => Ok(Kind::Manual(Some(0))),
+                    "Auto" => Ok(Inline::Auto),
+                    "Never" => Ok(Inline::Manual(None)),
+                    "Always" => Ok(Inline::Manual(Some(0))),
                     _ => Err(de::Error::unknown_field(value, FIELDS)),
                 }
             }
 
-            fn visit_i64<E>(self, value: i64) -> Result<Kind, E>
+            fn visit_i64<E>(self, value: i64) -> Result<Inline, E>
             where
                 E: de::Error,
             {
@@ -203,7 +81,7 @@ impl<'de> Deserialize<'de> for Kind {
                 }
             }
 
-            fn visit_u64<E>(self, value: u64) -> Result<Kind, E>
+            fn visit_u64<E>(self, value: u64) -> Result<Inline, E>
             where
                 E: de::Error,
             {
@@ -213,19 +91,16 @@ impl<'de> Deserialize<'de> for Kind {
                         &self,
                     ));
                 }
-                Ok(Kind::Manual(Some(value)))
+                Ok(Inline::Manual(Some(value)))
             }
         }
 
-        deserializer.deserialize_any(KindVisitor)
+        deserializer.deserialize_any(Visitor)
     }
 }
 
-impl Serialize for Kind {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
+impl Serialize for Inline {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         match self {
             Self::Auto => serializer.serialize_str("Auto"),
             Self::Manual(None) => serializer.serialize_str("Never"),
@@ -234,6 +109,3 @@ impl Serialize for Kind {
         }
     }
 }
-
-#[test]
-fn test() {}

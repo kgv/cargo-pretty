@@ -1,89 +1,148 @@
-use crate::{inline::Kind as InlineKind, order::Kind as OrderKind};
+#[doc(inline)]
+pub use self::{
+    badges::Badges,
+    dependency_tables::{BuildDependencies, Dependencies, DevDependencies, Targets},
+    features::Features,
+    package::Package,
+    patch::Patch,
+    profile::Profiles,
+    replace::Replace,
+    target_tables::{Bench, Bin, Example, Lib, Test},
+    workspace::Workspace,
+};
+
+use crate::{inline::Inline, order::Order};
 use derivative::Derivative;
-use indexmap::indexmap;
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
-use std::borrow::Cow;
-
-const CONFIG_FILE_NAMES: [&str; 2] = [".cargofmt.toml", "cargofmt.toml"];
+use serde_diff::SerdeDiff;
+use std::iter::FromIterator;
 
 lazy_static! {
-    pub static ref DEFAULT: Settings = Settings::default();
-    pub static ref ROOT: OrderKind = {
-        OrderKind::Enumeration(indexmap! {
-            Cow::Borrowed("package") => 0,
-            Cow::Borrowed("lib") => 1,
-            Cow::Borrowed("bin") => 2,
-            Cow::Borrowed("example") => 3,
-            Cow::Borrowed("test") => 4,
-            Cow::Borrowed("bench") => 5,
-            Cow::Borrowed("dependencies") => 6,
-            Cow::Borrowed("dev-dependencies") => 7,
-            Cow::Borrowed("build-dependencies") => 8,
-            Cow::Borrowed("target") => 9,
-            Cow::Borrowed("badges") => 10,
-            Cow::Borrowed("features") => 11,
-            Cow::Borrowed("replace") => 12,
-            Cow::Borrowed("patch") => 13,
-            Cow::Borrowed("replace") => 14,
-            Cow::Borrowed("profile") => 15,
-            Cow::Borrowed("workspace") => 16,
-        })
-    };
-    pub static ref PACKAGE: OrderKind = {
-        OrderKind::Enumeration(indexmap! {
-            Cow::Borrowed("name") => 0,
-            Cow::Borrowed("version") => 1,
-            Cow::Borrowed("authors") => 2,
-            Cow::Borrowed("edition") => 3,
-            Cow::Borrowed("description") => 4,
-            Cow::Borrowed("documentation") => 5,
-            Cow::Borrowed("readme") => 6,
-            Cow::Borrowed("homepage") => 7,
-            Cow::Borrowed("repository") => 8,
-            Cow::Borrowed("license") => 9,
-            Cow::Borrowed("license-file") => 10,
-            Cow::Borrowed("keywords") => 11,
-            Cow::Borrowed("categories") => 12,
-            Cow::Borrowed("workspace") => 13,
-            Cow::Borrowed("build") => 14,
-            Cow::Borrowed("links") => 15,
-            Cow::Borrowed("exclude") => 16,
-            Cow::Borrowed("include") => 17,
-            Cow::Borrowed("publish") => 18,
-            Cow::Borrowed("metadata") => 19,
-            Cow::Borrowed("default-run") => 20,
-            Cow::Borrowed("autobins") => 21,
-            Cow::Borrowed("autoexamples") => 22,
-            Cow::Borrowed("autotests") => 23,
-            Cow::Borrowed("autobenches") => 24,
-        })
-    };
-    pub static ref TARGET: OrderKind = {
-        OrderKind::Enumeration(indexmap! {
-            Cow::Borrowed("name") => 0,
-            Cow::Borrowed("path") => 1,
-            Cow::Borrowed("test") => 2,
-            Cow::Borrowed("doctest") => 3,
-            Cow::Borrowed("bench") => 4,
-            Cow::Borrowed("doc") => 5,
-            Cow::Borrowed("plugin") => 6,
-            Cow::Borrowed("proc-macro") => 7,
-            Cow::Borrowed("harness") => 8,
-            Cow::Borrowed("edition") => 9,
-            Cow::Borrowed("crate-type") => 10,
-            Cow::Borrowed("required-features") => 11,
-        })
-    };
+    static ref MANIFEST: Order = Order::from_iter(vec![
+        "package",
+        "lib",
+        "bin",
+        "example",
+        "test",
+        "bench",
+        "dependencies",
+        "dev-dependencies",
+        "build-dependencies",
+        "target",
+        "badges",
+        "features",
+        "replace",
+        "patch",
+        "replace",
+        "profile",
+        "workspace",
+    ]);
+    static ref PACKAGE: Order = Order::from_iter(vec![
+        "name",
+        "version",
+        "authors",
+        "edition",
+        "description",
+        "documentation",
+        "readme",
+        "homepage",
+        "repository",
+        "license",
+        "license-file",
+        "keywords",
+        "categories",
+        "workspace",
+        "build",
+        "links",
+        "exclude",
+        "include",
+        "publish",
+        "metadata",
+        "default-run",
+        "autobins",
+        "autoexamples",
+        "autotests",
+        "autobenches",
+    ]);
+    static ref TARGETS: Order = Order::from_iter(vec!["lib", "bin", "example", "test", "bench"]);
+    static ref TARGET: Order = Order::from_iter(vec![
+        "name",
+        "path",
+        "test",
+        "doctest",
+        "bench",
+        "doc",
+        "plugin",
+        "proc-macro",
+        "harness",
+        "edition",
+        "crate-type",
+        "required-features",
+    ]);
+    static ref DEPENDENCIES: Order = Order::from_iter(vec![
+        "dependencies",
+        "dev-dependencies",
+        "build-dependencies",
+    ]);
+    static ref DEPENDENCY: Order = Order::from_iter(vec![
+        "version",
+        "git",
+        "branch",
+        "rev",
+        "tag",
+        "path",
+        "registry",
+        "package",
+        "optional",
+        "default-features",
+        "features",
+    ]);
+    static ref BADGES: Order = Order::from_iter(vec![
+        "appveyor",
+        "circle-ci",
+        "cirrus-ci",
+        "gitlab",
+        "azure-devops",
+        "travis-ci",
+        "bitbucket-pipelines",
+        "codecov",
+        "coveralls",
+        "is-it-maintained-issue-resolution",
+        "is-it-maintained-open-issues",
+        "maintenance",
+    ]);
+    static ref BADGE: Order = Order::from_iter(vec![
+        "repository",
+        "branch",
+        "service",
+        "project",
+        "pipeline",
+        "build",
+    ]);
+    static ref FEATURES: Order = Order::from_iter(vec!["default"]);
+    static ref PROFILES: Order = Order::from_iter(vec!["dev", "release", "test", "bench"]);
+    static ref PROFILE: Order = Order::from_iter(vec![
+        "opt-level",
+        "debug",
+        "debug-assertions",
+        "overflow-checks",
+        "lto",
+        "panic",
+        "incremental",
+        "codegen-units",
+        "rpath",
+    ]);
+    static ref WORKSPACE: Order = Order::from_iter(vec!["members", "default-members", "exclude"]);
 }
 
 /// Settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
+#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
 #[derivative(Default)]
 #[serde(default, deny_unknown_fields, rename_all = "kebab-case")]
 pub struct Settings {
-    #[derivative(Default(value = "ROOT.clone()"))]
-    pub order: OrderKind,
+    #[derivative(Default(value = "MANIFEST.clone()"))]
+    pub order: Order,
     pub package: Package,
     pub lib: Lib,
     pub bin: Bin,
@@ -91,201 +150,371 @@ pub struct Settings {
     pub test: Test,
     pub bench: Bench,
     pub dependencies: Dependencies,
-    pub build_dependencies: BuildDependencies,
     pub dev_dependencies: DevDependencies,
-    pub target: Target,
+    pub build_dependencies: BuildDependencies,
+    pub targets: Targets,
     pub badges: Badges,
     pub features: Features,
     pub patch: Patch,
     pub replace: Replace,
-    pub profile: Profile,
+    pub profiles: Profiles,
     pub workspace: Workspace,
 }
 
-/// The package settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields)]
-pub struct Package {
-    #[derivative(Default(value = "PACKAGE.clone()"))]
-    pub order: OrderKind,
-    #[derivative(Default(value = "InlineKind::Manual(Some(1))"))]
-    pub inline: InlineKind,
-    pub authors: Order,
-    pub keywords: Order,
-    pub categories: Order,
-    pub exclude: Order,
-    pub include: Order,
+pub mod package {
+    use super::*;
+
+    /// The package settings.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Package {
+        #[derivative(Default(value = "PACKAGE.clone()"))]
+        pub order: Order,
+        #[derivative(Default(value = "Inline::Manual(Some(1))"))]
+        pub inline: Inline,
+        pub authors: Authors,
+        pub keywords: Keywords,
+        pub categories: Categories,
+        pub exclude: Exclude,
+        pub include: Include,
+        pub metadata: Metadata,
+    }
+
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Authors {
+        pub order: Order,
+    }
+
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Keywords {
+        pub order: Order,
+    }
+
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Categories {
+        pub order: Order,
+    }
+
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Exclude {
+        pub order: Order,
+    }
+
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Include {
+        pub order: Order,
+    }
+
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Metadata {
+        pub order: Order,
+        #[derivative(Default(value = "Inline::Manual(Some(2))"))]
+        pub inline: Inline,
+    }
 }
 
-// Target tables:
+// Target tables.
+pub mod target_tables {
+    use super::*;
 
-/// The lib settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields, rename_all = "kebab-case")]
-pub struct Lib {
-    #[derivative(Default(value = "TARGET.clone()"))]
-    pub order: OrderKind,
-    pub crate_type: Order,
+    /// The lib settings.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields, rename_all = "kebab-case")]
+    pub struct Lib {
+        #[derivative(Default(value = "TARGET.clone()"))]
+        pub order: Order,
+        pub crate_type: CrateType,
+    }
+
+    /// The bin settings.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields, rename_all = "kebab-case")]
+    pub struct Bin {
+        #[derivative(Default(value = "TARGET.clone()"))]
+        pub order: Order,
+        pub required_features: RequiredFeatures,
+    }
+
+    /// The example settings.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields, rename_all = "kebab-case")]
+    pub struct Example {
+        #[derivative(Default(value = "TARGET.clone()"))]
+        pub order: Order,
+        pub required_features: RequiredFeatures,
+    }
+
+    /// The test settings.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields, rename_all = "kebab-case")]
+    pub struct Test {
+        #[derivative(Default(value = "TARGET.clone()"))]
+        pub order: Order,
+        pub required_features: RequiredFeatures,
+    }
+
+    /// The bench settings.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields, rename_all = "kebab-case")]
+    pub struct Bench {
+        #[derivative(Default(value = "TARGET.clone()"))]
+        pub order: Order,
+        pub crate_type: CrateType,
+        pub required_features: RequiredFeatures,
+    }
+
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct CrateType {
+        pub order: Order,
+    }
+
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct RequiredFeatures {
+        pub order: Order,
+    }
 }
 
-/// The bin settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields, rename_all = "kebab-case")]
-pub struct Bin {
-    #[derivative(Default(value = "TARGET.clone()"))]
-    pub order: OrderKind,
-    pub required_features: Order,
+// Dependency tables.
+pub mod dependency_tables {
+    use super::*;
+
+    /// The dependencies settings.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Dependencies {
+        pub order: Order,
+        #[derivative(Default(value = "Inline::Manual(Some(1))"))]
+        pub inline: Inline,
+        #[serde(rename = "*")]
+        pub dependency: Dependency,
+    }
+
+    /// The dev-dependencies settings.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct DevDependencies {
+        pub order: Order,
+        #[derivative(Default(value = "Inline::Manual(Some(1))"))]
+        pub inline: Inline,
+        #[serde(rename = "*")]
+        pub dependency: Dependency,
+    }
+
+    /// The build-dependencies settings.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct BuildDependencies {
+        pub order: Order,
+        #[derivative(Default(value = "Inline::Manual(Some(1))"))]
+        pub inline: Inline,
+        #[serde(rename = "*")]
+        pub dependency: Dependency,
+    }
+
+    /// The target settings.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Targets {
+        pub order: Order,
+        pub dependencies: Dependencies,
+        pub dev_dependencies: DevDependencies,
+        pub build_dependencies: BuildDependencies,
+        #[serde(rename = "*")]
+        pub target: Target,
+    }
+
+    /// Any target.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Target {
+        #[derivative(Default(value = "DEPENDENCIES.clone()"))]
+        pub order: Order,
+    }
+
+    /// Any dependency.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Dependency {
+        #[derivative(Default(value = "DEPENDENCY.clone()"))]
+        pub order: Order,
+    }
 }
 
-/// The example settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields, rename_all = "kebab-case")]
-pub struct Example {
-    #[derivative(Default(value = "TARGET.clone()"))]
-    pub order: OrderKind,
-    pub required_features: Order,
+pub mod badges {
+    use super::*;
+
+    /// The badges settings.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Badges {
+        #[derivative(Default(value = "BADGES.clone()"))]
+        pub order: Order,
+        #[derivative(Default(value = "Inline::Manual(Some(1))"))]
+        pub inline: Inline,
+        #[serde(rename = "*")]
+        pub badge: Badge,
+    }
+
+    /// Any badge.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Badge {
+        #[derivative(Default(value = "BADGE.clone()"))]
+        pub order: Order,
+    }
 }
 
-/// The test settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields, rename_all = "kebab-case")]
-pub struct Test {
-    #[derivative(Default(value = "TARGET.clone()"))]
-    pub order: OrderKind,
-    pub required_features: Order,
+pub mod features {
+    use super::*;
+
+    /// The features settings.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Features {
+        #[derivative(Default(value = "FEATURES.clone()"))]
+        pub order: Order,
+        #[serde(rename = "*")]
+        pub feature: Feature,
+    }
+
+    /// Any feature.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Feature {
+        pub order: Order,
+    }
 }
 
-/// The bench settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields, rename_all = "kebab-case")]
-pub struct Bench {
-    #[derivative(Default(value = "TARGET.clone()"))]
-    pub order: OrderKind,
-    pub crate_type: Order,
-    pub required_features: Order,
+pub mod patch {
+    use super::*;
+
+    /// The patch settings.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Patch {
+        pub order: Order,
+        #[derivative(Default(value = "Inline::Manual(Some(2))"))]
+        pub inline: Inline,
+    }
 }
 
-// Dependency tables:
+pub mod replace {
+    use super::*;
 
-/// The dependencies settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields)]
-pub struct Dependencies {
-    pub order: OrderKind,
-    #[derivative(Default(value = "InlineKind::Manual(Some(1))"))]
-    pub inline: InlineKind,
+    /// The replace settings (deprecated).
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Replace {
+        pub order: Order,
+    }
 }
 
-/// The dev-dependencies settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields)]
-pub struct DevDependencies {
-    pub order: OrderKind,
-    #[derivative(Default(value = "InlineKind::Manual(Some(1))"))]
-    pub inline: InlineKind,
+pub mod profile {
+    use super::*;
+
+    /// The profile settings.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Profiles {
+        #[derivative(Default(value = "PROFILES.clone()"))]
+        pub order: Order,
+        #[derivative(Default(value = "Inline::Manual(Some(1))"))]
+        pub inline: Inline,
+        #[serde(rename = "*")]
+        pub profile: Profile,
+    }
+
+    /// Any profile.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Profile {
+        #[derivative(Default(value = "PROFILE.clone()"))]
+        pub order: Order,
+    }
 }
 
-/// The build-dependencies settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields)]
-pub struct BuildDependencies {
-    pub order: OrderKind,
-    #[derivative(Default(value = "InlineKind::Manual(Some(1))"))]
-    pub inline: InlineKind,
-}
+pub mod workspace {
+    use super::*;
 
-/// The target settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields)]
-pub struct Target {
-    pub order: OrderKind,
-    #[derivative(Default(value = "InlineKind::Manual(None)"))]
-    pub inline: InlineKind,
-}
+    /// The workspace settings.
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Workspace {
+        #[derivative(Default(value = "WORKSPACE.clone()"))]
+        pub order: Order,
+        pub members: Members,
+        pub default_members: DefaultMembers,
+        pub exclude: Exclude,
+    }
 
-/// The badges settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields)]
-pub struct Badges {
-    pub order: OrderKind,
-    #[derivative(Default(value = "InlineKind::Manual(Some(1))"))]
-    pub inline: InlineKind,
-    #[serde(rename = "*")]
-    pub children: Order,
-}
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Members {
+        pub order: Order,
+    }
 
-/// The features settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields)]
-pub struct Features {
-    pub order: OrderKind,
-    #[serde(rename = "*")]
-    pub children: Order,
-}
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct DefaultMembers {
+        pub order: Order,
+    }
 
-/// The patch settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields)]
-pub struct Patch {
-    pub order: OrderKind,
-}
-
-/// The replace settings (deprecated).
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields)]
-pub struct Replace {
-    pub order: OrderKind,
-}
-
-/// The profile settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields)]
-pub struct Profile {
-    pub order: OrderKind,
-}
-
-/// The workspace settings.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields)]
-pub struct Workspace {
-    pub order: OrderKind,
-    pub members: Order,
-    pub exclude: Order,
-}
-
-/// A general setting with exactly one action: order.
-#[derive(Clone, Debug, Derivative, Deserialize, PartialEq, Serialize)]
-#[derivative(Default)]
-#[serde(default, deny_unknown_fields)]
-pub struct Order {
-    pub order: OrderKind,
+    #[derive(Clone, Debug, Derivative, Deserialize, PartialEq, SerdeDiff, Serialize)]
+    #[derivative(Default)]
+    #[serde(default, deny_unknown_fields)]
+    pub struct Exclude {
+        pub order: Order,
+    }
 }
 
 #[cfg(test)]
 mod test {
-    use super::{InlineKind, Settings};
+    use super::*;
     use anyhow::Result;
 
     #[test]
     fn empty() -> Result<()> {
-        const DEFAULT_CONFIG: &str = include_str!("../assets/cargofmt.default.toml");
-        const EMPTY_CONFIG: &str = include_str!("../assets/cargofmt.empty.toml");
+        const DEFAULT_CONFIG: &str = include_str!("../assets/configs/cargofmt.default.toml");
+        const EMPTY_CONFIG: &str = include_str!("../assets/configs/cargofmt.empty.toml");
         let settings: Settings = toml::from_str(EMPTY_CONFIG)?;
         let config = toml::to_string(&settings)?;
         assert_eq!(DEFAULT_CONFIG, config);
@@ -294,7 +523,7 @@ mod test {
 
     #[test]
     fn full() -> Result<()> {
-        const CONFIG: &str = include_str!("../assets/cargofmt.full.toml");
+        const CONFIG: &str = include_str!("../assets/configs/cargofmt.full.toml");
         let settings: Settings = toml::from_str(CONFIG)?;
         let config = toml::to_string(&settings)?;
         assert_eq!(CONFIG, config);
@@ -308,7 +537,7 @@ mod test {
             inline = \"Auto\"
         ";
         let settings: Settings = toml::from_str(CONFIG)?;
-        assert_eq!(InlineKind::Auto, settings.package.inline);
+        assert_eq!(Inline::Auto, settings.package.inline);
         Ok(())
     }
 
@@ -319,7 +548,7 @@ mod test {
             inline = \"Never\"
         ";
         let settings: Settings = toml::from_str(CONFIG)?;
-        assert_eq!(InlineKind::Manual(None), settings.package.inline);
+        assert_eq!(Inline::Manual(None), settings.package.inline);
         Ok(())
     }
 
@@ -330,7 +559,7 @@ mod test {
             inline = \"Always\"
         ";
         let settings: Settings = toml::from_str(CONFIG)?;
-        assert_eq!(InlineKind::Manual(Some(0)), settings.package.inline);
+        assert_eq!(Inline::Manual(Some(0)), settings.package.inline);
         Ok(())
     }
 
@@ -341,7 +570,7 @@ mod test {
             inline = 1
         ";
         let settings: Settings = toml::from_str(CONFIG)?;
-        assert_eq!(InlineKind::Manual(Some(1)), settings.package.inline);
+        assert_eq!(Inline::Manual(Some(1)), settings.package.inline);
         Ok(())
     }
 
@@ -352,7 +581,7 @@ mod test {
             inline = 9
         ";
         let settings: Settings = toml::from_str(CONFIG)?;
-        assert_eq!(InlineKind::Manual(Some(9)), settings.package.inline);
+        assert_eq!(Inline::Manual(Some(9)), settings.package.inline);
         Ok(())
     }
 }

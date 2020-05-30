@@ -7,34 +7,30 @@
   TODO: Why cargo creates tample with single quotes for the `package.edition`
   and double quotes for the rest?
 
-## Sections
+## Data
 
-Preference:
-
-- preferred order for sections:
-  1.0. `package`,
-  2.0. `lib`,
-  3.0. `bin`,
-  4.0. `example`,
-  5.0. `test`,
-  6.0. `bench`,
-  7.0. `dependencies`,
-  8.0. `dev-dependencies`,
-  9.0. `build-dependencies`,
-  10.0. `target`,
-  11.0. `badges`,
-  12.0. `features`,
-  13.0. `replace`,
-  14.0. `patch`,
-  15.0. `profile`,
-  16.0. `workspace`;
+- order sections for manifest:
+  1. `package`,
+  2. `lib`,
+  3. `bin`,
+  4. `example`,
+  5. `test`,
+  6. `bench`,
+  7. `dependencies`,
+  8. `dev-dependencies`,
+  9. `build-dependencies`,
+  10. `target`,
+  11. `badges`,
+  12. `features`,
+  13. `replace`,
+  14. `patch`,
+  15. `profile`,
+  16. `workspace`;
 - sections should be separated by a single blank line.
 
-### Package section
+### Package
 
-Preference:
-
-- preferred order for the `package` section:
+- order for `package`:
   1. `name`,
   2. `version`,
   3. `authors`,
@@ -60,38 +56,18 @@ Preference:
   23. `autoexamples`,
   24. `autotests`,
   25. `autobenches`;
-- prefer start with a capital letter and end with a dot for
-  `package.description`.
+- `description` is single sentence,
+- `description` starts with a capital letter and ends with a dot.
 
-### Dependencies tables section
+### Target tables
 
-Preference:
-
-- preferred order for dependencies tables section
-  1. `dependencies`,
-  2. `dev-dependencies`,
-  3. `build-dependencies`,
-  4. `target`;
-- order for each dependency table: alphabetical,
-
-TODO:
-
-- preferred order for `dependencies`, `dev-dependencies`, `build-dependencies`:
-  - version (the first key),
-  - other keys are in alphabetical order,
-  - features (the last key).
-
-### Target tables section
-
-Preference:
-
-- preferred order for target tables section:
+- order for target tables:
   1. `lib`,
   2. `bin`,
   3. `example`,
   4. `test`,
   5. `bench`;
-- preferred order for each target table:
+- order for each target table:
   1. `name`,
   2. `path`,
   3. `test`,
@@ -105,28 +81,84 @@ Preference:
   11. `crate-type`,
   12. `required-features`.
 
-### Badges section
+### Dependencies tables
 
-Preference:
+- order for dependencies tables:
+  1. `dependencies`,
+  2. `dev-dependencies`,
+  3. `build-dependencies`,
+  4. `target`;
+- order for each dependency table:
+  1. `version`,
+  2. `git` or `path` or `registry`,
+  3. `branch` or `rev` or `tag`,
+  4. `package`,
+  5. `optional`,
+  6. `default-features`,
+  7. `features`.
 
-- preferred order for the `badges` section: alphabetical,
-- inline level for the `badges` section: 1.
+### Badges
 
-### Features section
+- order for `badges`:
+  1. `appveyor`,
+  2. `circle-ci`,
+  3. `cirrus-ci`,
+  4. `gitlab`,
+  5. `azure-devops`,
+  6. `travis-ci`,
+  7. `bitbucket-pipelines`,
+  8. `codecov`,
+  9. `coveralls`,
+  10. `is-it-maintained-issue-resolution`,
+  11. `is-it-maintained-open-issues`,
+  12. `maintenance`;
+- order for each badge:
+  1. `repository` or `project`,
+  2. `branch` or `pipeline`,
+  3. `service` or `build`;
+- inline level for `badges`: 1.
 
-Requirements:
+### Features
 
+- order for `features`: `Alphabetic`,
+  1. `default`;
+- inline level for `features`: 1,
 - features should never be negative (e.g., foo is good, no-foo is bad),
-- features should be named using kebab-case.
-
-Preference:
-
-- preferred order for the `features` section: alphabetical,
-- inline level for the `features` section: 1,
+- features should be named using kebab-case,
 - prefer short but descriptive feature names,
 - prefer not to have default features.
 
-## Comments
+### Patch
+
+### Replace
+
+### Profile
+
+- order for `profile`:
+  - `dev`,
+  - `release`,
+  - `test`,
+  - `bench`;
+- order for each entry in `profile`:
+  - `opt-level`,
+  - `debug`,
+  - `debug-assertions`,
+  - `overflow-checks`,
+  - `lto`,
+  - `panic`,
+  - `incremental`,
+  - `codegen-units`,
+  - `rpath`;
+
+### Workspace
+
+- order for `workspace`:
+  - `members`,
+  - `default-members`,
+  - `exclude`;
+- order for each entry in `workspace`: `Alphabetic`.
+
+## Meta (Comments)
 
 ```toml
 # This is comment 0 for `a`.
@@ -138,8 +170,6 @@ Preference:
 b = "cargofmt" # This is comment 3 for `a.b`.
 c = "0.1.0" # This is comment 0 for `a.c`.
 ```
-
-Preference:
 
 - prefer to use "full-line" instead of "end of a line" comment.
 

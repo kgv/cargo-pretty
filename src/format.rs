@@ -1,72 +1,189 @@
-use toml_edit::{decorated, Array, ArrayOfTables, InlineTable, Item, Table, Value};
+use crate::{settings::Settings, sort::Sort};
+use optional_index::OptionalIndexMut;
+use std::fmt::Display;
+use toml_lalrpop::{
+    format::Independent,
+    value::{Item, Table},
+};
+
+// Array of tables iterator.
+fn array_of_tables(optional_item: Option<&mut Item>) -> impl Iterator<Item = &mut Item> {
+    optional_item
+        .and_then(|item| item.as_array_mut())
+        .map(|array| array.iter_mut())
+        .into_iter()
+        .flatten()
+}
+
+// Table iterator.
+fn table(optional_item: Option<&mut Item>) -> impl Iterator<Item = (&String, &mut Item)> {
+    optional_item
+        .and_then(|item| item.as_table_mut())
+        .map(|table| table.iter_mut())
+        .into_iter()
+        .flatten()
+}
 
 /// Format.
 pub trait Format {
-    fn format(&mut self);
-}
-
-impl Format for Item {
-    fn format(&mut self) {
-        *self = match self {
-            Item::None => return,
-            Item::Value(value) => {
-                value.format();
-                Item::Value(value.clone())
-            }
-            Item::Table(table) => {
-                table.format();
-                Item::Table(table.clone())
-            }
-            Item::ArrayOfTables(input_array_of_tables) => {
-                let mut output_array_of_tables = ArrayOfTables::new();
-                for table in input_array_of_tables.iter() {
-                    let mut table = table.clone();
-                    table.format();
-                    output_array_of_tables.append(table);
-                }
-                Item::ArrayOfTables(output_array_of_tables)
-            }
-        }
+    fn format<'a>(&'a mut self, settings: &'a Settings) -> Box<dyn 'a + Display> {
+        self.sort(settings);
+        self.inline(settings)
     }
-}
 
-impl Format for Value {
-    fn format(&mut self) {
-        let value = match &*self {
-            Value::Array(input_array) => {
-                let mut output_array = Array::default();
-                for value in input_array.iter() {
-                    let mut value = value.clone();
-                    value.format();
-                    output_array.push(value);
-                }
-                output_array.fmt();
-                output_array.into()
-            }
-            Value::InlineTable(input_inline_table) => {
-                let mut output_inline_table = InlineTable::default();
-                for (key, value) in input_inline_table.iter() {
-                    let mut value = value.clone();
-                    value.format();
-                    output_inline_table.get_or_insert(key, value);
-                }
-                output_inline_table.fmt();
-                output_inline_table.into()
-            }
-            value => value.clone(),
-        };
-        *self = decorated(value.into(), " ", "");
-    }
+    fn sort(&mut self, settings: &Settings);
+
+    fn inline<'a>(&'a mut self, settings: &'a Settings) -> Box<dyn 'a + Display>;
 }
 
 impl Format for Table {
-    fn format(&mut self) {
-        let mut table = Table::new();
-        for (key, item) in self.iter() {
-            let mut item = item.clone();
-            item.format();
-            *table.entry(key) = item;
+    fn sort(&mut self, settings: &Settings) {
+        Sort::sort(self, &settings.order);
+        // package.
+        let mut package = self.optional_index_mut("package");
+        package.sort(&settings.package.order);
+        package
+            .optional_index_mut("authors")
+            .sort(&settings.package.authors.order);
+        package
+            .optional_index_mut("keywords")
+            .sort(&settings.package.keywords.order);
+        package
+            .optional_index_mut("categories")
+            .sort(&settings.package.categories.order);
+        package
+            .optional_index_mut("exclude")
+            .sort(&settings.package.exclude.order);
+        package
+            .optional_index_mut("include")
+            .sort(&settings.package.include.order);
+        // Target tables:
+        {
+            // lib.
+            let mut lib = self.optional_index_mut("lib");
+            lib.sort(&settings.lib.order);
+            lib.optional_index_mut("crate-type")
+                .sort(&settings.lib.crate_type.order);
+            // bin.
+            for bin in array_of_tables(self.optional_index_mut("bin")) {
+                bin.sort(&settings.bin.order);
+                bin.optional_index_mut("required-features")
+                    .sort(&settings.bin.required_features.order);
+            }
+            // example.
+            for example in array_of_tables(self.optional_index_mut("example")) {
+                example.sort(&settings.example.order);
+                example
+                    .optional_index_mut("required-features")
+                    .sort(&settings.example.required_features.order);
+            }
+            // test.
+            for test in array_of_tables(self.optional_index_mut("test")) {
+                test.sort(&settings.test.order);
+                test.optional_index_mut("required-features")
+                    .sort(&settings.test.required_features.order);
+            }
+            // bench.
+            for bench in array_of_tables(self.optional_index_mut("bench")) {
+                bench.sort(&settings.bench.order);
+                bench
+                    .optional_index_mut("crate-type")
+                    .sort(&settings.bench.crate_type.order);
+                bench
+                    .optional_index_mut("required-features")
+                    .sort(&settings.bench.required_features.order);
+            }
         }
-        *self = table
+        // Dependency tables:
+        {
+            // dependencies.
+            let mut dependencies = self.optional_index_mut("dependencies");
+            dependencies.sort(&settings.dependencies.order);
+            for (_, dependency) in table(dependencies) {
+                dependency.sort(&settings.dependencies.dependency.order);
+            }
+            // dev-dependencies.
+            let mut dev_dependencies = self.optional_index_mut("dev-dependencies");
+            dev_dependencies.sort(&settings.dev_dependencies.order);
+            for (_, dependency) in table(dev_dependencies) {
+                dependency.sort(&settings.dev_dependencies.dependency.order);
+            }
+            // build-dependencies.
+            let mut build_dependencies = self.optional_index_mut("build-dependencies");
+            build_dependencies.sort(&settings.build_dependencies.order);
+            for (_, dependency) in table(build_dependencies) {
+                dependency.sort(&settings.build_dependencies.dependency.order);
+            }
+            // target.
+            let mut targets = self.optional_index_mut("target");
+            targets.sort(&settings.targets.order);
+            for (_, target) in table(targets) {
+                target.sort(&settings.targets.target.order);
+            }
+        }
+        // badges.
+        let mut badges = self.optional_index_mut("badges");
+        badges.sort(&settings.badges.order);
+        for (_, badge) in table(badges) {
+            badge.sort(&settings.badges.badge.order);
+        }
+        // features.
+        let mut features = self.optional_index_mut("features");
+        features.sort(&settings.features.order);
+        for (_, feature) in table(features) {
+            feature.sort(&settings.features.feature.order);
+        }
+        // patch.
+        self.optional_index_mut("patch").sort(&settings.patch.order);
+        // replace.
+        self.optional_index_mut("replace")
+            .sort(&settings.replace.order);
+        // profile.
+        let mut profiles = self.optional_index_mut("profile");
+        profiles.sort(&settings.profiles.order);
+        for (_, profile) in table(profiles) {
+            profile.sort(&settings.profiles.profile.order);
+        }
+        // workspace.
+        let mut workspace = self.optional_index_mut("workspace");
+        workspace.sort(&settings.workspace.order);
+        workspace
+            .optional_index_mut("members")
+            .sort(&settings.workspace.members.order);
+        workspace
+            .optional_index_mut("default-members")
+            .sort(&settings.workspace.default_members.order);
+        workspace
+            .optional_index_mut("exclude")
+            .sort(&settings.workspace.exclude.order);
+    }
+
+    fn inline<'a>(&'a mut self, settings: &'a Settings) -> Box<dyn 'a + Display> {
+        #[rustfmt::skip]
+        let is_inline = move |key: &[&str]| match key {
+            ["package"] => settings.package.inline.is_inline(),
+            // ["package", "metadata", ..] => false,
+            ["package", ..] => settings.package.inline.branch().is_inline(),
+            ["dependencies"] => settings.dependencies.inline.is_inline(),
+            ["dependencies", ..] => settings.dependencies.inline.branch().is_inline(),
+            ["dev-dependencies"] => settings.dev_dependencies.inline.is_inline(),
+            ["dev-dependencies", ..] => settings.dev_dependencies.inline.branch().is_inline(),
+            ["build-dependencies"] => settings.build_dependencies.inline.is_inline(),
+            ["build-dependencies", ..] => settings.build_dependencies.inline.branch().is_inline(),
+            ["target", _, "dependencies"] => settings.targets.dependencies.inline.is_inline(),
+            ["target", _, "dependencies", ..] => settings.targets.dependencies.inline.branch().is_inline(),
+            ["target", _, "dev-dependencies"] => settings.targets.dev_dependencies.inline.is_inline(),
+            ["target", _, "dev-dependencies", ..] => settings.targets.dev_dependencies.inline.branch().is_inline(),
+            ["target", _, "build-dependencies"] => settings.targets.build_dependencies.inline.is_inline(),
+            ["target", _, "build-dependencies", ..] => settings.targets.build_dependencies.inline.branch().is_inline(),
+            ["badges"] => settings.badges.inline.is_inline(),
+            ["badges", ..] => settings.badges.inline.branch().is_inline(),
+            ["patch"] => settings.patch.inline.is_inline(),
+            ["patch", ..] => settings.patch.inline.branch().is_inline(),
+            ["profile"] => settings.profiles.inline.is_inline(),
+            ["profile", ..] => settings.profiles.inline.branch().is_inline(),
+            _ => false,
+        };
+        Box::new(Independent::new(self, is_inline))
     }
 }

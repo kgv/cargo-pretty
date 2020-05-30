@@ -1,8 +1,17 @@
-[package]
-order = "Forward"
+# [package]
+# order = "Alphabetic"
 
-[badges]
-order = ["travis-ci", "appveyor"]
+# [package]
+# order = "Alphabetic"
 
-[badges."*"]
-order = ["branch", "repository"]
+# [features]
+# order = ["default"]
+
+[features]
+order = "Alphabetic"
+
+# [badges]
+# order = "Alphabetic"
+
+# [badges."*"]
+# order = ["branch", "repository"]
