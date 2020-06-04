@@ -162,7 +162,7 @@ impl Format for Table {
         #[rustfmt::skip]
         let is_inline = move |key: &[&str]| match key {
             ["package"] => settings.package.inline.is_inline(),
-            // ["package", "metadata", ..] => false,
+            ["package", "metadata", ..] => false,
             ["package", ..] => settings.package.inline.branch().is_inline(),
             ["dependencies"] => settings.dependencies.inline.is_inline(),
             ["dependencies", ..] => settings.dependencies.inline.branch().is_inline(),

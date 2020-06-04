@@ -1,0 +1,27 @@
+[package]
+name = "quote"
+version = "1.0.6" # don't forget to update html_root_url, version in readme for breaking changes
+authors = ["David Tolnay <dtolnay@gmail.com>"]
+edition = "2018"
+description = "Quasi-quoting macro quote!(...)"
+documentation = "https://docs.rs/quote/"
+readme = "README.md"
+repository = "https://github.com/dtolnay/quote"
+license = "MIT OR Apache-2.0"
+keywords = ["syn"]
+categories = ["development-tools::procedural-macro-helpers"]
+include = ["Cargo.toml", "LICENSE-APACHE", "LICENSE-MIT", "README.md", "src/**/*.rs", "tests/**/*.rs"]
+metadata = { docs = { rs = { targets = ["x86_64-unknown-linux-gnu"] } } }
+
+[dependencies]
+proc-macro2 = { version = "1.0", default-features = false }
+
+[dev-dependencies]
+rustversion = "1.0"
+trybuild = { version = "1.0.19", features = ["diff"] }
+
+[features]
+default = ["proc-macro"]
+# Disabling the proc-macro feature removes the dynamic library dependency on
+# libproc_macro in the rustc compiler.
+proc-macro = ["proc-macro2/proc-macro"]

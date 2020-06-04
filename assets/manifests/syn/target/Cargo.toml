@@ -1,0 +1,57 @@
+[package]
+name = "syn"
+version = "1.0.24" # don't forget to update html_root_url and syn.json
+authors = ["David Tolnay <dtolnay@gmail.com>"]
+edition = "2018"
+description = "Parser for Rust source code"
+documentation = "https://docs.rs/syn"
+readme = "README.md"
+repository = "https://github.com/dtolnay/syn"
+license = "MIT OR Apache-2.0"
+categories = ["development-tools::procedural-macro-helpers"]
+include = ["/Cargo.toml", "/LICENSE-APACHE", "/LICENSE-MIT", "/README.md", "/benches/**", "/build.rs", "/src/**", "/tests/**"]
+metadata = { docs = { rs = { all-features = true, targets = ["x86_64-unknown-linux-gnu"] } }, playground = { all-features = true } }
+
+[[bench]]
+name = "rust"
+harness = false
+required-features = ["full", "parsing"]
+
+[[bench]]
+name = "file"
+required-features = ["full", "parsing"]
+
+[dependencies]
+proc-macro2 = { version = "1.0.13", default-features = false }
+quote = { version = "1.0", optional = true, default-features = false }
+unicode-xid = "0.2"
+
+[dev-dependencies]
+anyhow = "1.0"
+flate2 = "1.0"
+insta = "0.16"
+rayon = "1.0"
+ref-cast = "1.0"
+regex = "1.0"
+reqwest = { version = "0.10", features = ["blocking"] }
+syn-test-suite = { version = "0", path = "tests/features" }
+tar = "0.4"
+termcolor = "1.0"
+walkdir = "2.1"
+
+[features]
+default = ["clone-impls", "derive", "parsing", "printing", "proc-macro"]
+clone-impls = []
+derive = []
+extra-traits = []
+fold = []
+full = []
+parsing = []
+printing = ["quote"]
+proc-macro = ["proc-macro2/proc-macro", "quote/proc-macro"]
+test = ["syn-test-suite/all-features"]
+visit = []
+visit-mut = []
+
+[workspace]
+members = ["dev", "json", "tests/features"]

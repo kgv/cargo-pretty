@@ -1,6 +1,7 @@
 # Cargo manifest style guideline
 
 - Limit lines to 100 characters.
+- Order for any entry: same as in [the manifest format documentation][manifest];
 - When using a multi-line block, put the opening and closing braces or brackets
   on their own lines, and indent with four spaces.
 - prefer use double quotes instead of single quotes,  
@@ -177,3 +178,5 @@ c = "0.1.0" # This is comment 0 for `a.c`.
 
 - [0](https://github.com/pingcap/style-guide/blob/master/docs/rust/modules.md#cargotoml)
 - [1](https://github.com/killercup/cargo-edit/issues/361)
+
+[manifest]: https://doc.rust-lang.org/cargo/reference/manifest.html

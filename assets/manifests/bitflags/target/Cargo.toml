@@ -1,0 +1,30 @@
+[package]
+name = "bitflags"
+# NB: When modifying, also modify:
+#   1. html_root_url in lib.rs
+#   2. number in readme (for breaking changes)
+version = "1.2.1"
+authors = ["The Rust Project Developers"]
+description = """
+A macro to generate structures which behave like bitflags.
+"""
+documentation = "https://docs.rs/bitflags"
+readme = "README.md"
+homepage = "https://github.com/bitflags/bitflags"
+repository = "https://github.com/bitflags/bitflags"
+license = "MIT/Apache-2.0"
+keywords = ["bit", "bitflags", "bitmask", "flags"]
+categories = ["no-std"]
+build = "build.rs"
+exclude = [".travis.yml", "appveyor.yml", "bors.toml"]
+metadata = { docs = { rs = { features = ["example_generated"] } } }
+
+[badges]
+travis-ci = { repository = "bitflags/bitflags" }
+
+[features]
+default = []
+example_generated = []
+
+[workspace]
+members = ["test_suite"]

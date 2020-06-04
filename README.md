@@ -46,6 +46,32 @@ c = { d = "d", e = "e" }
 b = { c = { d = "d", e = "e" } }
 ```
 
+## Install
+
+`cargo install --git https://github.com/kgv/cargofmt`
+
+## Usage
+
+Format the `Cargo.toml` file in the current directory and print it to stdout:
+
+`cargofmt`
+
+Format and overwrite the `Cargo.toml` file in the current directory with backup:
+
+`cargofmt --backup --output=file`
+
+Print active config to stdout:
+
+`cargofmt config`
+
+Print default config to stdout:
+
+`cargofmt config default`
+
+Write active config to file:
+
+`cargofmt config --output=config.toml`
+
 ## Todo
 
 - [x] comments,

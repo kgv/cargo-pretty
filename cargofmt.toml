@@ -7,8 +7,8 @@
 # [features]
 # order = ["default"]
 
-[features]
-order = "Alphabetic"
+# [features]
+# order = "Alphabetic"
 
 # [badges]
 # order = "Alphabetic"

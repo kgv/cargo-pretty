@@ -1,0 +1,36 @@
+[package]
+name = "libc"
+version = "0.2.70"
+authors = ["The Rust Project Developers"]
+description = """
+Raw FFI bindings to platform libraries like libc.
+"""
+documentation = "http://doc.rust-lang.org/libc"
+readme = "README.md"
+homepage = "https://github.com/rust-lang/libc"
+repository = "https://github.com/rust-lang/libc"
+license = "MIT OR Apache-2.0"
+keywords = ["bindings", "ffi", "libc", "operating", "system"]
+categories = ["external-ffi-bindings", "no-std", "os"]
+build = "build.rs"
+exclude = ["/azure-pipelines.yml", "/ci/*"]
+
+[dependencies]
+rustc-std-workspace-core = { version = "1.0.0", optional = true }
+
+[badges]
+cirrus-ci = { repository = "rust-lang/libc", branch = "master" }
+azure-devops = { project = "rust-lang2/libc", pipeline = "rust-lang.libc%20(1)" }
+
+[features]
+default = ["std"]
+align = []
+const-extern-fn = []
+extra_traits = []
+rustc-dep-of-std = ['align', 'rustc-std-workspace-core']
+std = []
+# use_std is deprecated, use `std` instead
+use_std = ['std']
+
+[workspace]
+members = ["libc-test"]
