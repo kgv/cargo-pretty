@@ -10,7 +10,13 @@ repository = "https://github.com/dtolnay/syn"
 license = "MIT OR Apache-2.0"
 categories = ["development-tools::procedural-macro-helpers"]
 include = ["/Cargo.toml", "/LICENSE-APACHE", "/LICENSE-MIT", "/README.md", "/benches/**", "/build.rs", "/src/**", "/tests/**"]
-metadata = { docs = { rs = { all-features = true, targets = ["x86_64-unknown-linux-gnu"] } }, playground = { all-features = true } }
+
+[package.metadata.docs.rs]
+all-features = true
+targets = ["x86_64-unknown-linux-gnu"]
+
+[package.metadata.playground]
+all-features = true
 
 [[bench]]
 name = "rust"

@@ -12,7 +12,12 @@ keywords = ["no_std", "serde", "serialization"]
 categories = ["encoding"]
 build = "build.rs"
 include = ["Cargo.toml", "LICENSE-APACHE", "LICENSE-MIT", "README.md", "build.rs", "crates-io.md", "src/**/*.rs"]
-metadata = { playground = { features = ["rc", "derive"] }, docs = { rs = { targets = ["x86_64-unknown-linux-gnu"] } } }
+
+[package.metadata.playground]
+features = ["rc", "derive"]
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
 serde_derive = { version = "=1.0.110", path = "../serde_derive", optional = true }

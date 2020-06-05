@@ -58,7 +58,8 @@
   24. `autotests`,
   25. `autobenches`;
 - `description` is single sentence,
-- `description` starts with a capital letter and ends with a dot.
+- `description` starts with a capital letter and ends with a dot,
+- inline level for `metadata`: None.
 
 ### Target tables
 

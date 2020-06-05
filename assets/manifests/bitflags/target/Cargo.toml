@@ -17,7 +17,9 @@ keywords = ["bit", "bitflags", "bitmask", "flags"]
 categories = ["no-std"]
 build = "build.rs"
 exclude = [".travis.yml", "appveyor.yml", "bors.toml"]
-metadata = { docs = { rs = { features = ["example_generated"] } } }
+
+[package.metadata.docs.rs]
+features = ["example_generated"]
 
 [badges]
 travis-ci = { repository = "bitflags/bitflags" }

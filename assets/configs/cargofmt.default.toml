@@ -62,6 +62,10 @@ order = "Alphabetic"
 [package.include]
 order = "Alphabetic"
 
+[package.metadata]
+order = "Alphabetic"
+inline = "None"
+
 [lib]
 order = [
     "name",
@@ -164,44 +168,199 @@ order = "Alphabetic"
 order = "Alphabetic"
 inline = 1
 
-[build-dependencies]
-order = "Alphabetic"
-inline = 1
+[dependencies."*"]
+order = [
+    "version",
+    "git",
+    "branch",
+    "rev",
+    "tag",
+    "path",
+    "registry",
+    "package",
+    "optional",
+    "default-features",
+    "features",
+]
 
 [dev-dependencies]
 order = "Alphabetic"
 inline = 1
 
-[target]
-order = "Alphabetic"
-inline = "Never"
+[dev-dependencies."*"]
+order = [
+    "version",
+    "git",
+    "branch",
+    "rev",
+    "tag",
+    "path",
+    "registry",
+    "package",
+    "optional",
+    "default-features",
+    "features",
+]
 
-[badges]
+[build-dependencies]
 order = "Alphabetic"
 inline = 1
 
-[badges."*"]
+[build-dependencies."*"]
+order = [
+    "version",
+    "git",
+    "branch",
+    "rev",
+    "tag",
+    "path",
+    "registry",
+    "package",
+    "optional",
+    "default-features",
+    "features",
+]
+
+[targets]
 order = "Alphabetic"
 
-[features]
+[targets.dependencies]
 order = "Alphabetic"
+inline = 1
+
+[targets.dependencies."*"]
+order = [
+    "version",
+    "git",
+    "branch",
+    "rev",
+    "tag",
+    "path",
+    "registry",
+    "package",
+    "optional",
+    "default-features",
+    "features",
+]
+
+[targets.dev_dependencies]
+order = "Alphabetic"
+inline = 1
+
+[targets.dev_dependencies."*"]
+order = [
+    "version",
+    "git",
+    "branch",
+    "rev",
+    "tag",
+    "path",
+    "registry",
+    "package",
+    "optional",
+    "default-features",
+    "features",
+]
+
+[targets.build_dependencies]
+order = "Alphabetic"
+inline = 1
+
+[targets.build_dependencies."*"]
+order = [
+    "version",
+    "git",
+    "branch",
+    "rev",
+    "tag",
+    "path",
+    "registry",
+    "package",
+    "optional",
+    "default-features",
+    "features",
+]
+
+[targets."*"]
+order = [
+    "dependencies",
+    "dev-dependencies",
+    "build-dependencies",
+]
+
+[badges]
+order = [
+    "appveyor",
+    "circle-ci",
+    "cirrus-ci",
+    "gitlab",
+    "azure-devops",
+    "travis-ci",
+    "bitbucket-pipelines",
+    "codecov",
+    "coveralls",
+    "is-it-maintained-issue-resolution",
+    "is-it-maintained-open-issues",
+    "maintenance",
+]
+inline = 1
+
+[badges."*"]
+order = [
+    "repository",
+    "branch",
+    "service",
+    "project",
+    "pipeline",
+    "build",
+]
+
+[features]
+order = ["default"]
 
 [features."*"]
 order = "Alphabetic"
 
 [patch]
 order = "Alphabetic"
+inline = 2
 
 [replace]
 order = "Alphabetic"
 
-[profile]
-order = "Alphabetic"
+[profiles]
+order = [
+    "dev",
+    "release",
+    "test",
+    "bench",
+]
+inline = 1
+
+[profiles."*"]
+order = [
+    "opt-level",
+    "debug",
+    "debug-assertions",
+    "overflow-checks",
+    "lto",
+    "panic",
+    "incremental",
+    "codegen-units",
+    "rpath",
+]
 
 [workspace]
-order = "Alphabetic"
+order = [
+    "members",
+    "default-members",
+    "exclude",
+]
 
 [workspace.members]
+order = "Alphabetic"
+
+[workspace.default_members]
 order = "Alphabetic"
 
 [workspace.exclude]

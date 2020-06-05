@@ -1,4 +1,3 @@
-[package]
 name = "log"
 version = "0.4.10" # remember to update html_root_url
 authors = ["The Rust Project Developers"]
@@ -13,7 +12,9 @@ keywords = ["logging"]
 categories = ["development-tools::debugging"]
 build = "build.rs"
 exclude = ["/.travis.yml", "/appveyor.yml", "rfcs/**/*"]
-metadata = { docs = { rs = { features = ["kv_unstable_sval", "serde", "std"] } } }
+
+[package.metadata.docs.rs]
+features = ["kv_unstable_sval", "serde", "std"]
 
 [[test]]
 name = "filters"
