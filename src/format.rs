@@ -159,29 +159,48 @@ impl Format for Table {
     }
 
     fn inline<'a>(&'a mut self, settings: &'a Settings) -> Box<dyn 'a + Display> {
-        #[rustfmt::skip]
         let is_inline = move |key: &[&str]| match key {
-            ["package"] => settings.package.inline.is_inline(),
-            ["package", "metadata", ..] => false,
-            ["package", ..] => settings.package.inline.branch().is_inline(),
-            ["dependencies"] => settings.dependencies.inline.is_inline(),
-            ["dependencies", ..] => settings.dependencies.inline.branch().is_inline(),
-            ["dev-dependencies"] => settings.dev_dependencies.inline.is_inline(),
-            ["dev-dependencies", ..] => settings.dev_dependencies.inline.branch().is_inline(),
-            ["build-dependencies"] => settings.build_dependencies.inline.is_inline(),
-            ["build-dependencies", ..] => settings.build_dependencies.inline.branch().is_inline(),
-            ["target", _, "dependencies"] => settings.targets.dependencies.inline.is_inline(),
-            ["target", _, "dependencies", ..] => settings.targets.dependencies.inline.branch().is_inline(),
-            ["target", _, "dev-dependencies"] => settings.targets.dev_dependencies.inline.is_inline(),
-            ["target", _, "dev-dependencies", ..] => settings.targets.dev_dependencies.inline.branch().is_inline(),
-            ["target", _, "build-dependencies"] => settings.targets.build_dependencies.inline.is_inline(),
-            ["target", _, "build-dependencies", ..] => settings.targets.build_dependencies.inline.branch().is_inline(),
-            ["badges"] => settings.badges.inline.is_inline(),
-            ["badges", ..] => settings.badges.inline.branch().is_inline(),
-            ["patch"] => settings.patch.inline.is_inline(),
-            ["patch", ..] => settings.patch.inline.branch().is_inline(),
-            ["profile"] => settings.profiles.inline.is_inline(),
-            ["profile", ..] => settings.profiles.inline.branch().is_inline(),
+            ["profile", rest @ ..] => settings.profiles.inline.level(rest.len()).is_inline(),
+            ["patch", rest @ ..] => settings.patch.inline.level(rest.len()).is_inline(),
+            ["badges", rest @ ..] => settings.badges.inline.level(rest.len()).is_inline(),
+            ["target", _, "build-dependencies", rest @ ..] => settings
+                .targets
+                .build_dependencies
+                .inline
+                .level(rest.len())
+                .is_inline(),
+            ["target", _, "dev-dependencies", rest @ ..] => settings
+                .targets
+                .dev_dependencies
+                .inline
+                .level(rest.len())
+                .is_inline(),
+            ["target", _, "dependencies", rest @ ..] => settings
+                .targets
+                .dependencies
+                .inline
+                .level(rest.len())
+                .is_inline(),
+            ["build-dependencies", rest @ ..] => settings
+                .build_dependencies
+                .inline
+                .level(rest.len())
+                .is_inline(),
+            ["dev-dependencies", rest @ ..] => settings
+                .dev_dependencies
+                .inline
+                .level(rest.len())
+                .is_inline(),
+            ["dependencies", rest @ ..] => {
+                settings.dependencies.inline.level(rest.len()).is_inline()
+            }
+            ["package", "metadata", rest @ ..] => settings
+                .package
+                .metadata
+                .inline
+                .level(rest.len())
+                .is_inline(),
+            ["package", rest @ ..] => settings.package.inline.level(rest.len()).is_inline(),
             _ => false,
         };
         Box::new(Independent::new(self, is_inline))

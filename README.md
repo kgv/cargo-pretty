@@ -47,30 +47,39 @@ Order:
 Inline:
 
 - "Auto" - depends on line length.
-- "Never" - never inline,
-- "Always" - always inline,
-- `1..` - level inline.
+- "None" - never inline,
+- `0..` - inline starting at level (0 - always inline).
 
-`inline = "Never"`:
+### Examples
+
+for key `a`
+
+`inline = 0`:
 
 ```toml
-[a.b.c]
-d = "d"
-e = "e"
+a = { b = { c = { d = "d", e = "e" } } }
 ```
 
 `inline = 1`:
+
+```toml
+[a]
+b = { c = { d = "d", e = "e" } }
+```
+
+`inline = 2`:
 
 ```toml
 [a.b]
 c = { d = "d", e = "e" }
 ```
 
-`inline = 2` or more or `inline = "Always"`:
+`inline = 3` or more or `inline = "None"`:
 
 ```toml
-[a]
-b = { c = { d = "d", e = "e" } }
+[a.b.c]
+d = "d"
+e = "e"
 ```
 
 ## Todo

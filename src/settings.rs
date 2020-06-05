@@ -221,7 +221,7 @@ pub mod package {
     #[serde(default, deny_unknown_fields)]
     pub struct Metadata {
         pub order: Order,
-        #[derivative(Default(value = "Inline::Manual(Some(2))"))]
+        #[derivative(Default(value = "Inline::Manual(None)"))]
         pub inline: Inline,
     }
 }
@@ -509,79 +509,90 @@ pub mod workspace {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::Ordered;
     use anyhow::Result;
+
+    #[test]
+    fn default() -> Result<()> {
+        const DEFAULT_CONFIG: &str = include_str!("../assets/configs/cargofmt.default.toml");
+        let default: Settings = toml::from_str(DEFAULT_CONFIG)?;
+        assert_eq!(default, Settings::default());
+        Ok(())
+    }
 
     #[test]
     fn empty() -> Result<()> {
         const DEFAULT_CONFIG: &str = include_str!("../assets/configs/cargofmt.default.toml");
         const EMPTY_CONFIG: &str = include_str!("../assets/configs/cargofmt.empty.toml");
-        let settings: Settings = toml::from_str(EMPTY_CONFIG)?;
-        let config = toml::to_string(&settings)?;
-        assert_eq!(DEFAULT_CONFIG, config);
+        let empty: Settings = toml::from_str(EMPTY_CONFIG)?;
+        let default: Settings = toml::from_str(DEFAULT_CONFIG)?;
+        assert_eq!(empty, default);
         Ok(())
     }
 
     #[test]
-    fn full() -> Result<()> {
-        const CONFIG: &str = include_str!("../assets/configs/cargofmt.full.toml");
+    fn order() -> Result<()> {
+        const CONFIG: &str = r#"
+            [package]
+            order = "Alphabetic"
+        "#;
         let settings: Settings = toml::from_str(CONFIG)?;
-        let config = toml::to_string(&settings)?;
-        assert_eq!(CONFIG, config);
+        assert_eq!(settings.package.order, Order::Ordered(Ordered::Alphabetic));
         Ok(())
     }
 
     #[test]
     fn inline_auto() -> Result<()> {
-        const CONFIG: &str = "
-            [package]\n\
-            inline = \"Auto\"
-        ";
+        const CONFIG: &str = r#"
+            [package]
+            inline = "Auto"
+        "#;
         let settings: Settings = toml::from_str(CONFIG)?;
-        assert_eq!(Inline::Auto, settings.package.inline);
+        assert_eq!(settings.package.inline, Inline::Auto);
         Ok(())
     }
 
     #[test]
-    fn inline_never() -> Result<()> {
-        const CONFIG: &str = "
-            [package]\n\
-            inline = \"Never\"
-        ";
+    fn inline_none() -> Result<()> {
+        const CONFIG: &str = r#"
+            [package]
+            inline = "None"
+        "#;
         let settings: Settings = toml::from_str(CONFIG)?;
-        assert_eq!(Inline::Manual(None), settings.package.inline);
+        assert_eq!(settings.package.inline, Inline::Manual(None));
         Ok(())
     }
 
     #[test]
-    fn inline_always() -> Result<()> {
-        const CONFIG: &str = "
-            [package]\n\
-            inline = \"Always\"
-        ";
+    fn inline_level_0() -> Result<()> {
+        const CONFIG: &str = r#"
+            [package]
+            inline = 0
+        "#;
         let settings: Settings = toml::from_str(CONFIG)?;
-        assert_eq!(Inline::Manual(Some(0)), settings.package.inline);
+        assert_eq!(settings.package.inline, Inline::Manual(Some(0)));
         Ok(())
     }
 
     #[test]
     fn inline_level_1() -> Result<()> {
-        const CONFIG: &str = "
-            [package]\n\
+        const CONFIG: &str = r#"
+            [package]
             inline = 1
-        ";
+        "#;
         let settings: Settings = toml::from_str(CONFIG)?;
-        assert_eq!(Inline::Manual(Some(1)), settings.package.inline);
+        assert_eq!(settings.package.inline, Inline::Manual(Some(1)));
         Ok(())
     }
 
     #[test]
     fn inline_level_9() -> Result<()> {
-        const CONFIG: &str = "
-            [package]\n\
+        const CONFIG: &str = r#"
+            [package]
             inline = 9
-        ";
+        "#;
         let settings: Settings = toml::from_str(CONFIG)?;
-        assert_eq!(Inline::Manual(Some(9)), settings.package.inline);
+        assert_eq!(settings.package.inline, Inline::Manual(Some(9)));
         Ok(())
     }
 }
