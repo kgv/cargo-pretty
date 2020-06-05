@@ -9,6 +9,33 @@ See [style guideline](./STYLE-GUIDELINE.md) for more.
 Note the `0.*` version: it means that the code is very much experimental. You
 shouldn’t use this crate for any serious project yet.
 
+## Install
+
+`cargo install --git https://github.com/kgv/cargofmt`
+
+## Usage
+
+Format the `Cargo.toml` file from the current directory and print it to stdout:
+
+`cargofmt`
+
+Format and overwrite the `Cargo.toml` file from the current directory with
+backup:
+
+`cargofmt --backup --output=file`
+
+Print active config to stdout:
+
+`cargofmt config`
+
+Print default config to stdout:
+
+`cargofmt config default`
+
+Write active config to file:
+
+`cargofmt config --output=config.toml`
+
 ## Settings
 
 Order:
@@ -45,32 +72,6 @@ c = { d = "d", e = "e" }
 [a]
 b = { c = { d = "d", e = "e" } }
 ```
-
-## Install
-
-`cargo install --git https://github.com/kgv/cargofmt`
-
-## Usage
-
-Format the `Cargo.toml` file in the current directory and print it to stdout:
-
-`cargofmt`
-
-Format and overwrite the `Cargo.toml` file in the current directory with backup:
-
-`cargofmt --backup --output=file`
-
-Print active config to stdout:
-
-`cargofmt config`
-
-Print default config to stdout:
-
-`cargofmt config default`
-
-Write active config to file:
-
-`cargofmt config --output=config.toml`
 
 ## Todo
 
