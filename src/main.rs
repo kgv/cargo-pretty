@@ -18,12 +18,12 @@ use ron::ser::PrettyConfig;
 use serde::Serialize;
 use serde_diff::Diff;
 use std::{
+    borrow::Cow,
     fs::{read_to_string, rename, write, File},
     io::{stdout, Write},
+    path::Path,
 };
 use toml_lalrpop::TomlParser;
-
-const CONFIG_FILE_NAMES: [&str; 2] = [".cargofmt.toml", "cargofmt.toml"];
 
 // set RUST_LOG=info
 //
@@ -31,8 +31,8 @@ const CONFIG_FILE_NAMES: [&str; 2] = [".cargofmt.toml", "cargofmt.toml"];
 //
 // cargo run -- config active
 //
-// cargo run -- .\\.rs.bk\\sandbox\\1\\Cargo.toml
-// cargo run -- .\\assets\\manifests\\rand\\Cargo.toml
+// cargo run -- ./.rs.bk/sandbox/1/Cargo.toml
+// cargo run -- ./assets/manifests/bitflags/Cargo.toml
 // cargo run -- --backup .\\.rs.bk\\sandbox\\Cargo.toml
 // cargo run -- --config-path=.\\ .\\.rs.bk\\sandbox\\Cargo.toml
 // cargo run -- --backup --config-path=.\\ .\\.rs.bk\\sandbox\\Cargo.toml
@@ -40,7 +40,7 @@ fn main() -> Result<()> {
     env_logger::init();
     let options = Options::new();
     trace!("options: {:?}", options);
-    let settings = settings(&options)?;
+    let settings = settings(&options.config_path)?;
     trace!("settings: {:?}", settings);
     match options.subcommand {
         Some(SubCommand::Config(config)) => config_subcommand(&config, &settings)?,
@@ -49,11 +49,29 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn settings(options: &Options) -> Result<Settings> {
-    let path = &options.config_path.join("cargofmt.toml");
-    debug!("config_file: {}", path.display());
-    match read_to_string(path) {
-        Ok(content) => {
+fn config(path: &Path) -> Result<Option<Cow<Path>>> {
+    const CONFIG_FILE_NAMES: [&str; 2] = ["cargofmt.toml", ".cargofmt.toml"];
+
+    let mut dir = Cow::Borrowed(path);
+    if dir.is_relative() {
+        dir = Cow::Owned(dir.canonicalize()?);
+    }
+    while let Some(parent) = dir.parent() {
+        for name in &CONFIG_FILE_NAMES {
+            let file = dir.join(name);
+            if file.exists() {
+                return Ok(Some(Cow::Owned(file)));
+            }
+        }
+        dir = Cow::Owned(parent.to_path_buf());
+    }
+    Ok(None)
+}
+
+fn settings(path: &Path) -> Result<Settings> {
+    match config(path)? {
+        Some(ref path) => {
+            let content = read_to_string(path)?;
             info!("{} settings are used", path.display());
             Ok(toml::from_str(&content)?)
         }
@@ -136,3 +154,6 @@ fn toml<W: Write, T: Serialize>(mut writer: W, serialize: T) -> Result<()> {
 }
 
 mod options;
+
+#[test]
+fn test() {}
