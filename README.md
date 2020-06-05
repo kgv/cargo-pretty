@@ -15,24 +15,35 @@ shouldn’t use this crate for any serious project yet.
 
 ## Usage
 
-Format the `Cargo.toml` file from the current directory and print it to stdout:
+Looks for the `Cargo.toml` file starting from the current directory, formats and
+prints it to stdout:
 
 `cargofmt`
 
-Format and overwrite the `Cargo.toml` file from the current directory with
-backup:
+Looks for the `Cargo.toml` file starting from the current directory, formats and
+overwrites it:
+
+`cargofmt --output=file`
+
+Looks for the `Cargo.toml` file starting from the current directory, formats and
+overwrites it with backup:
 
 `cargofmt --backup --output=file`
 
-Print active config to stdout:
+Looks for the `Cargo.toml` file starting from the `./config` directory, formats
+and overwrites it:
+
+`cargofmt --config-path=./config --output=file`
+
+Prints active config to stdout:
 
 `cargofmt config`
 
-Print default config to stdout:
+Prints default config to stdout:
 
 `cargofmt config default`
 
-Write active config to file:
+Writes active config to file:
 
 `cargofmt config --output=config.toml`
 

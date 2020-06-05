@@ -26,16 +26,6 @@ use std::{
 use toml_lalrpop::TomlParser;
 
 // set RUST_LOG=info
-//
-// cargo run -- --backup --output=file Cargo.toml
-//
-// cargo run -- config active
-//
-// cargo run -- ./.rs.bk/sandbox/1/Cargo.toml
-// cargo run -- ./assets/manifests/bitflags/Cargo.toml
-// cargo run -- --backup .\\.rs.bk\\sandbox\\Cargo.toml
-// cargo run -- --config-path=.\\ .\\.rs.bk\\sandbox\\Cargo.toml
-// cargo run -- --backup --config-path=.\\ .\\.rs.bk\\sandbox\\Cargo.toml
 fn main() -> Result<()> {
     env_logger::init();
     let options = Options::new();
@@ -154,6 +144,3 @@ fn toml<W: Write, T: Serialize>(mut writer: W, serialize: T) -> Result<()> {
 }
 
 mod options;
-
-#[test]
-fn test() {}
