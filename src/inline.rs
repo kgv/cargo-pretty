@@ -5,6 +5,7 @@ use std::{
     convert::TryFrom,
     fmt::{self, Formatter},
 };
+
 /// Inline.
 ///
 /// - `Inline::Auto` - TODO:,
