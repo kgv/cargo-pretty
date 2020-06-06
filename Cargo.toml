@@ -25,3 +25,9 @@ serde-diff = { git = "https://github.com/crzysdrs/serde-diff" }
 serde_json = "1.0.53"
 toml = { version = "0.5.6", features = ["preserve_order"] }
 toml-lalrpop = { git = "https://github.com/kgv/toml-lalrpop" }
+
+[features]
+default = []
+drain-filter = ["nightly", "toml-lalrpop/drain-filter"]
+nightly = ["unstable"]
+unstable = []

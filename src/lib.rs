@@ -1,5 +1,3 @@
-#![feature(or_patterns)]
-
 #[doc(inline)]
 pub use self::{
     format::Format,

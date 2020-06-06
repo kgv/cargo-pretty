@@ -57,8 +57,12 @@ impl Sort for Array {
             (Value::Primitive(a), Value::Primitive(b)) => {
                 cmp(order, &a.to_string(), &b.to_string())
             }
-            (Value::Primitive(_), Value::Array(_) | Value::Table(_)) => Ordering::Greater,
-            (Value::Array(_) | Value::Table(_), Value::Primitive(_)) => Ordering::Less,
+            (Value::Primitive(_), Value::Array(_)) | (Value::Primitive(_), Value::Table(_)) => {
+                Ordering::Greater
+            }
+            (Value::Array(_), Value::Primitive(_)) | (Value::Table(_), Value::Primitive(_)) => {
+                Ordering::Less
+            }
             _ => Ordering::Equal,
         });
     }
