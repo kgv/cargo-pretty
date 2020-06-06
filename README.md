@@ -21,37 +21,48 @@ shouldn’t use this crate for any serious project yet.
 
 ## Usage
 
-Looks for the `Cargo.toml` file starting from the current directory, formats and
-prints it to stdout:
+```text
+USAGE:
+    cargofmt [FLAGS] [OPTIONS] [MANIFEST_FILES]...
+    cargofmt <SUBCOMMAND>
 
-`cargofmt`
+ARGS:
+    <MANIFEST_FILES>...    Sets the manifest files to format [default: Cargo.toml]
 
-Looks for the `Cargo.toml` file starting from the current directory, formats and
-overwrites it:
+FLAGS:
+    -b, --backup     Backup any modified files
+    -h, --help       Prints help information
+    -V, --version    Prints version information
 
-`cargofmt --output=file`
+OPTIONS:
+        --config-path <CONFIG_PATH>    Recursively searches the path for the config file [default: ./]
+        --output <OUTPUT>              Output type [default: stdout]  [possible values: file, stdout]
 
-Looks for the `Cargo.toml` file starting from the current directory, formats and
-overwrites it with backup:
+SUBCOMMANDS:
+    config    Manipulate config
+    help      Prints this message or the help of the given subcommand(s)
+```
 
-`cargofmt --backup --output=file`
+### `cargofmt config`
 
-Looks for the `Cargo.toml` file starting from the `./config` directory, formats
-and overwrites it:
+<details>
 
-`cargofmt --config-path=./config --output=file`
+```text
+USAGE:
+    cargofmt config [OPTIONS] [TYPE]
 
-Prints active config to stdout:
+ARGS:
+    <TYPE>    Config type [default: active]  [possible values: active, default, diff]
 
-`cargofmt config`
+FLAGS:
+    -h, --help    Prints help information
 
-Prints default config to stdout:
+OPTIONS:
+        --format <FORMAT>    Format type [default: toml]  [possible values: json, ron, toml]
+        --output <OUTPUT>    Output type [default: stdout]
+```
 
-`cargofmt config default`
-
-Writes active config to file:
-
-`cargofmt config --output=config.toml`
+</details>
 
 ## Settings
 
@@ -67,7 +78,7 @@ Inline:
 - "None" - never inline,
 - `0..` - inline starting at level (0 - always inline).
 
-### Examples
+<details><summary>Examples</summary>
 
 for key `a`
 
@@ -98,6 +109,8 @@ c = { d = "d", e = "e" }
 d = "d"
 e = "e"
 ```
+
+</details>
 
 ## Todo
 

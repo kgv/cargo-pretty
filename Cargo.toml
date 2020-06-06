@@ -1,11 +1,15 @@
 [package]
 name = "cargofmt"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["kgv <kgv@users.noreply.github.com>"]
 edition = '2018'
 description = "A tool for formatting manifest according to style guidelines"
+readme = "README.md"
+homepage = "https://crates.io/crates/cargofmt"
+repository = "https://github.com/kgv/cargofmt"
 license = "MIT OR Apache-2.0"
-categories = ["development-tools"]
+keywords = ["binary", "cargo", "cli", "format", "toml", "utility"]
+categories = ["command-line-utilities", "config", "development-tools"]
 
 [dependencies]
 anyhow = "1.0.31"

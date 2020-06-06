@@ -9,7 +9,7 @@ use std::{convert::TryFrom, ffi::OsStr, path::PathBuf, str::FromStr};
 #[clap(setting = AppSettings::SubcommandsNegateReqs)]
 #[clap(setting = AppSettings::VersionlessSubcommands)]
 pub struct Options {
-    /// Recursively searches the path for the cargofmt.toml config file
+    /// Recursively searches the path for the config file
     #[clap(name = "CONFIG_PATH", long = "config-path", default_value = "./")]
     pub config_path: PathBuf,
     /// Output type
