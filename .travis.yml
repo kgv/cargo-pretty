@@ -1,0 +1,11 @@
+language: rust
+
+matrix:
+  include:
+  - rust: stable
+    name: "Linux, stable"
+  - rust: nightly
+    name: "Linux, nightly"
+    script:
+    - cargo test --verbose --features=drain-filter
+

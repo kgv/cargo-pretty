@@ -1,5 +1,11 @@
 # Cargofmt
 
+[![Build Status](https://travis-ci.org/kgv/cargofmt.svg?branch=master)](https://travis-ci.org/kgv/cargofmt)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/kgv/cargofmt?svg=true)](https://ci.appveyor.com/project/kgv/cargofmt)
+[![Crates](https://img.shields.io/crates/v/cargofmt.svg)](https://crates.io/crates/cargofmt)
+[![Docs](https://docs.rs/cargofmt/badge.svg)](https://docs.rs/cargofmt)
+[![License](https://img.shields.io/crates/l/cargofmt)](#license)
+
 A tool for formatting manifest according to style guidelines.
 
 See [style guideline](./STYLE-GUIDELINE.md) for more.
