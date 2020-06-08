@@ -1,3 +1,4 @@
+
 [package]
 name = "syn"
 version = "1.0.24" # don't forget to update html_root_url and syn.json

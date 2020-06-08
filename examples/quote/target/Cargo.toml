@@ -1,3 +1,4 @@
+
 [package]
 name = "quote"
 version = "1.0.6" # don't forget to update html_root_url, version in readme for breaking changes

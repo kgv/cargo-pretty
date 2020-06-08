@@ -1,3 +1,4 @@
+
 [package]
 name = "serde"
 version = "1.0.110" # remember to update html_root_url and serde_derive dependency

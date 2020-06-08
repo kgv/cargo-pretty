@@ -21,7 +21,11 @@ pub struct Options {
     pub backup: bool,
 
     /// Sets the manifest files to format
-    #[clap(name = "MANIFEST_FILES", default_value = "Cargo.toml", parse(from_os_str))]
+    #[clap(
+        name = "MANIFEST_FILES",
+        default_value = "Cargo.toml",
+        parse(from_os_str)
+    )]
     pub files: Vec<PathBuf>,
 
     #[clap(subcommand)]
