@@ -1,5 +1,5 @@
 use anyhow::Result;
-use cargofmt::{Format, Settings};
+use cargo_pretty::{Format, Settings};
 use toml_lalrpop::TomlParser;
 
 #[cfg(test)]

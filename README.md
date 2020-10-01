@@ -1,10 +1,10 @@
-# Cargofmt
+# `cargo pretty`
 
-[![Build Status](https://travis-ci.org/kgv/cargofmt.svg?branch=master)](https://travis-ci.org/kgv/cargofmt)
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/kgv/cargofmt?svg=true)](https://ci.appveyor.com/project/kgv/cargofmt)
-[![Crates](https://img.shields.io/crates/v/cargofmt.svg)](https://crates.io/crates/cargofmt)
-[![Docs](https://docs.rs/cargofmt/badge.svg)](https://docs.rs/cargofmt)
-[![License](https://img.shields.io/crates/l/cargofmt)](#license)
+[![Build Status](https://travis-ci.org/kgv/cargo-pretty.svg?branch=master)](https://travis-ci.org/kgv/cargo-pretty)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/kgv/cargo-pretty?svg=true)](https://ci.appveyor.com/project/kgv/cargo-pretty)
+[![Crates](https://img.shields.io/crates/v/cargo-pretty.svg)](https://crates.io/crates/cargo-pretty)
+[![Docs](https://docs.rs/cargo-pretty/badge.svg)](https://docs.rs/cargo-pretty)
+[![License](https://img.shields.io/crates/l/cargo-pretty)](#license)
 
 A tool for formatting manifest according to style guidelines.
 
@@ -17,17 +17,17 @@ shouldn’t use this crate for any serious project yet.
 
 ## Install
 
-`cargo install --git https://github.com/kgv/cargofmt`
+`cargo install --git https://github.com/kgv/cargo-pretty`
 
 ## Usage
 
 ```text
 USAGE:
-    cargofmt [FLAGS] [OPTIONS] [MANIFEST_FILES]...
-    cargofmt <SUBCOMMAND>
+    cargo pretty [FLAGS] [OPTIONS] [FILES]...
+    cargo pretty <SUBCOMMAND>
 
 ARGS:
-    <MANIFEST_FILES>...    Sets the manifest files to format [default: Cargo.toml]
+    <FILES>...    Sets the manifest files to format [default: Cargo.toml]
 
 FLAGS:
     -b, --backup     Backup any modified files
@@ -43,23 +43,25 @@ SUBCOMMANDS:
     help      Prints this message or the help of the given subcommand(s)
 ```
 
-### `cargofmt config`
+### `cargo pretty config`
 
 <details>
 
 ```text
 USAGE:
-    cargofmt config [OPTIONS] [TYPE]
+    cargo pretty config [OPTIONS] [TYPE]
 
 ARGS:
     <TYPE>    Config type [default: active]  [possible values: active, default, diff]
 
 FLAGS:
-    -h, --help    Prints help information
+    -h, --help       Prints help information
+    -V, --version    Prints version information
 
 OPTIONS:
-        --format <FORMAT>    Format type [default: toml]  [possible values: json, ron, toml]
-        --output <OUTPUT>    Output type [default: stdout]
+        --config-path <CONFIG_PATH>    Recursively searches the path for the config file [default: ./]
+        --format <FORMAT>              Format type [default: toml]  [possible values: json, ron, toml]
+        --output <OUTPUT>              Output type [default: stdout]
 ```
 
 </details>

@@ -1,5 +1,5 @@
 use anyhow::Result;
-use cargofmt::{Format, Settings};
+use cargo_pretty::{Format, Settings};
 use std::fs::write;
 use toml_lalrpop::TomlParser;
 

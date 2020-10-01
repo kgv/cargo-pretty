@@ -514,7 +514,7 @@ mod test {
 
     #[test]
     fn default() -> Result<()> {
-        const DEFAULT_CONFIG: &str = include_str!("../cargofmt.default.toml");
+        const DEFAULT_CONFIG: &str = include_str!("../manifestfmt.default.toml");
         let default: Settings = toml::from_str(DEFAULT_CONFIG)?;
         assert_eq!(default, Settings::default());
         Ok(())
@@ -522,7 +522,7 @@ mod test {
 
     #[test]
     fn empty() -> Result<()> {
-        const DEFAULT_CONFIG: &str = include_str!("../cargofmt.default.toml");
+        const DEFAULT_CONFIG: &str = include_str!("../manifestfmt.default.toml");
         const EMPTY_CONFIG: &str = "";
         let empty: Settings = toml::from_str(EMPTY_CONFIG)?;
         let default: Settings = toml::from_str(DEFAULT_CONFIG)?;

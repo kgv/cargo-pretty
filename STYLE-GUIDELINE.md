@@ -169,11 +169,9 @@
 
 # This is comment 1 for `a.b`.
     # This is comment 2 for `a.b`.
-b = "cargofmt" # This is comment 3 for `a.b`.
+b = "1.0.0" # This is comment 3 for `a.b`.
 c = "0.1.0" # This is comment 0 for `a.c`.
 ```
-
-- prefer to use "full-line" instead of "end of a line" comment.
 
 ## Links
 

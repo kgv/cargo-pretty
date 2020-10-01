@@ -4,55 +4,55 @@ use clap::{AppSettings, Clap};
 use std::{convert::TryFrom, ffi::OsStr, path::PathBuf, str::FromStr};
 
 #[derive(Clap, Debug)]
-#[clap(version, author, about)]
-#[clap(setting = AppSettings::ArgsNegateSubcommands)]
-#[clap(setting = AppSettings::SubcommandsNegateReqs)]
-#[clap(setting = AppSettings::VersionlessSubcommands)]
-pub struct Options {
-    /// Recursively searches the path for the config file
-    #[clap(name = "CONFIG_PATH", long = "config-path", default_value = "./")]
-    pub config_path: PathBuf,
-    /// Output type
-    #[clap(name = "OUTPUT", long = "output", default_value = "stdout", possible_values = &["file", "stdout"])]
-    pub output: Output,
-
-    /// Backup any modified files
-    #[clap(short, long = "backup")]
-    pub backup: bool,
-
-    /// Sets the manifest files to format
+#[clap(bin_name = "cargo")]
+pub enum Options {
+    /// Format manifest.
     #[clap(
-        name = "MANIFEST_FILES",
-        default_value = "Cargo.toml",
-        parse(from_os_str)
+        name = "pretty",
+        setting = AppSettings::ArgsNegateSubcommands,
+        setting = AppSettings::DeriveDisplayOrder,
+        setting = AppSettings::DontCollapseArgsInUsage,
     )]
-    pub files: Vec<PathBuf>,
-
-    #[clap(subcommand)]
-    pub subcommand: Option<SubCommand>,
+    Pretty(Pretty),
 }
 
 impl Options {
     pub fn new() -> Options {
         let options = Options::parse();
-        for file in &options.files {
-            assert!(file.is_file(), "isn't file");
-            assert!(
-                Some(OsStr::new("Cargo.toml")) == file.file_name(),
-                "file isn't Cargo.toml"
-            );
+        let Options::Pretty(pretty) = &options;
+        if pretty.subcommand.is_none() {
+            for file in &pretty.files {
+                assert!(file.is_file(), "isn't file");
+                assert!(
+                    Some(OsStr::new("Cargo.toml")) == file.file_name(),
+                    "file isn't Cargo.toml"
+                );
+            }
         }
         options
     }
 }
 
 #[derive(Clap, Debug)]
-pub enum SubCommand {
-    #[clap(version, author)]
-    Config(Config),
+pub struct Pretty {
+    /// Recursively searches the path for the config file.
+    #[clap(name = "CONFIG_PATH", long = "config-path", default_value = "./")]
+    pub config_path: PathBuf,
+    /// Output type.
+    #[clap(name = "OUTPUT", long = "output", default_value = "stdout", possible_values = &["file", "stdout"])]
+    pub output: Output,
+    /// Backup any modified files.
+    #[clap(short, long = "backup")]
+    pub backup: bool,
+    /// Sets the manifest files to format.
+    #[clap(name = "FILES", default_value = "Cargo.toml", parse(from_os_str))]
+    pub files: Vec<PathBuf>,
+
+    #[clap(subcommand)]
+    pub subcommand: Option<SubCommand>,
 }
 
-/// Output type
+/// Output type.
 #[derive(Debug)]
 pub enum Output {
     File,
@@ -79,21 +79,30 @@ impl FromStr for Output {
     }
 }
 
+#[derive(Clap, Debug)]
+pub enum SubCommand {
+    #[clap(version, author)]
+    Config(Config),
+}
+
 pub mod config {
     use anyhow::{bail, Error, Result};
     use clap::Clap;
     use std::{convert::TryFrom, ffi::OsStr, path::PathBuf, str::FromStr};
 
-    /// Manipulate config
+    /// Manipulate config.
     #[derive(Clap, Debug)]
     pub struct Config {
-        /// Config type
+        /// Recursively searches the path for the config file.
+        #[clap(name = "CONFIG_PATH", long = "config-path", default_value = "./")]
+        pub config_path: PathBuf,
+        /// Config type.
         #[clap(name = "TYPE", default_value = "active", possible_values = &["active", "default", "diff"])]
         pub r#type: Type,
-        /// Format type
+        /// Format type.
         #[clap(name = "FORMAT", long = "format", default_value = "toml", possible_values = &["json", "ron", "toml"])]
         pub format: Format,
-        /// Output type
+        /// Output type.
         #[clap(
             name = "OUTPUT",
             long = "output",
@@ -103,7 +112,7 @@ pub mod config {
         pub output: Output,
     }
 
-    /// Format
+    /// Format.
     #[derive(Debug)]
     pub enum Format {
         Json,
@@ -132,7 +141,7 @@ pub mod config {
         }
     }
 
-    /// Output
+    /// Output.
     #[derive(Debug)]
     pub enum Output {
         File(PathBuf),
@@ -154,7 +163,7 @@ pub mod config {
         }
     }
 
-    /// Config type
+    /// Config type.
     #[derive(Clap, Debug)]
     pub enum Type {
         /// Active config
